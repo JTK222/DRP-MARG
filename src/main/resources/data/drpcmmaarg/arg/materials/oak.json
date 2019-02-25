@@ -1,0 +1,28 @@
+{
+    "type" : "wood",
+    "name" : "oak",
+    "items" : {
+		"log" : {
+			"item"	: "minecraft:log",
+			"meta"	: 0
+		},
+		"planks" : {
+			"item"	: "minecraft:planks",
+			"meta"	: 0
+		},
+		"leaves" : {
+			"item"	: "minecraft:leaves",
+			"meta"	: 0
+		}
+	},
+	"textures" : {
+		"log_side"					: "drpcmmaarg:arg/textures/wood/log_side/log_side_oak.png",
+		"log_top"					: "drpcmmaarg:arg/textures/wood/log_top/log_top_oak.png",
+		"stripped_log_side"	: "drpcmmaarg:arg/textures/wood/log_side_stripped/log_side_stripped_oak.png",
+		"stripped_log_top"	: "drpcmmaarg:arg/textures/wood/log_top_stripped/log_top_stripped_oak.png",
+		"planks"					: "drpcmmaarg:arg/textures/wood/plank/plank_oak.png",
+		"clean_planks"			: "drpcmmaarg:arg/textures/wood/clean_plank/clean_plank_oak.png"
+	},
+	"lang_key" : "drpmaarg.material.oak",
+    "lang_file"	: "drpcmmaarg:arg/lang/wood/oak.json"
+}

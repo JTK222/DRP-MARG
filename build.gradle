@@ -1,0 +1,41 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven { url = "http://files.minecraftforge.net/maven" }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
+}
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+version = "1.12.2-0.10.0-SNAPSHOT"
+group= "net.dark_roleplay.core_modules"
+archivesBaseName = "drpcmmaarg"
+
+sourceCompatibility = targetCompatibility = '1.8'
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+}
+
+apply from: 'https://dark-roleplay.net/files/gradle_helpers/1.12.2/minecraft.gradle'
+apply from: 'https://dark-roleplay.net/files/gradle_helpers/1.12.2/configurations.gradle'
+
+repositories {
+	maven {
+		name = "DarkRoleplayMaven"
+		url = "https://dark-roleplay.net/files/maven/"
+	}
+}
+
+dependencies {
+	contained group: "net.dark_roleplay", name: "drplibrary", version: "${mc_version}-${drp_library_version}", changing: true
+	
+	compile group: "net.dark_roleplay", name: "drplibrary", version: "${mc_version}-${drp_library_version}", changing: true
+}
+
+apply from: 'https://dark-roleplay.net/files/gradle_helpers/1.12.2/mcmod_info.gradle'
+apply from: 'https://dark-roleplay.net/files/gradle_helpers/1.12.2/signing.gradle'
+apply from: 'https://dark-roleplay.net/files/gradle_helpers/1.12.2/contained_jar.gradle'
+apply from: 'https://dark-roleplay.net/files/gradle_helpers/1.12.2/publishing.gradle'
+apply from: 'https://dark-roleplay.net/files/gradle_helpers/1.12.2/mod_maven.gradle'

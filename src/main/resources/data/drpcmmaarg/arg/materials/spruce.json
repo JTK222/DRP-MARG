@@ -1,0 +1,28 @@
+{
+    "type" : "wood",
+    "name" : "spruce",
+    "items" : {
+		"log" : {
+			"item"	: "minecraft:log",
+			"meta"	: 1
+		},
+		"planks" : {
+			"item"	: "minecraft:planks",
+			"meta"	: 1
+		},
+		"leaves" : {
+			"item"	: "minecraft:leaves",
+			"meta"	: 1
+		}
+	},
+	"textures" : {
+		"log_side"					: "drpcmmaarg:arg/textures/wood/log_side/log_side_spruce.png",
+		"log_top"					: "drpcmmaarg:arg/textures/wood/log_top/log_top_spruce.png",
+		"stripped_log_side"	: "drpcmmaarg:arg/textures/wood/log_side_stripped/log_side_stripped_spruce.png",
+		"stripped_log_top"	: "drpcmmaarg:arg/textures/wood/log_top_stripped/log_top_stripped_spruce.png",
+		"planks"					: "drpcmmaarg:arg/textures/wood/plank/plank_spruce.png",
+		"clean_planks"			: "drpcmmaarg:arg/textures/wood/clean_plank/clean_plank_spruce.png"
+	},
+	"lang_key" : "drpmaarg.material.spruce",
+    "lang_file"	: "drpcmmaarg:arg/lang/wood/spruce.json"
+}

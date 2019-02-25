@@ -1,0 +1,14 @@
+{
+	"type":"wood",
+	"outputs":[
+		"drpcmmaarg:textures/blocks/planks/planks_%wood%"
+	],
+	"required_textures":[],
+	"textures":[
+		{
+			"base":"planks",
+			"manipulations":[],
+			"output":"drpcmmaarg:textures/blocks/planks/planks_%wood%"
+		}
+	]
+}

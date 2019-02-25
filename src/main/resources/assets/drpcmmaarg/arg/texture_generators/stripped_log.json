@@ -1,0 +1,19 @@
+{
+	"type":"wood",
+	"outputs":[
+		"drpcmmaarg:textures/blocks/stripped_log_side/stripped_%wood%_log_side",
+		"drpcmmaarg:textures/blocks/stripped_log_top/stripped_%wood%_log_top"
+	],
+	"required_textures":[],
+	"textures":[
+		{
+			"base":"stripped_log_side",
+			"manipulations":[],
+			"output":"drpcmmaarg:textures/blocks/stripped_log_side/stripped_%wood%_log_side"
+		},{
+			"base":"stripped_log_top",
+			"manipulations":[],
+			"output":"drpcmmaarg:textures/blocks/stripped_log_top/stripped_%wood%_log_top"
+		}
+	]
+}
