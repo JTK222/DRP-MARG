@@ -1,0 +1,17 @@
+{
+	"version": 0,
+	"type": "wood",
+	"tasks": [
+		{
+			"input_type": "material",
+			"input":"stripped_log_side",
+			"output_type": "file",
+			"output":"marg:textures/block/stripped_log_side/stripped_%wood%_log_side"
+		},{
+			"input_type": "material",
+			"input":"stripped_log_top",
+			"output_type": "file",
+			"output":"marg:textures/block/stripped_log_top/stripped_%wood%_log_top"
+		}
+	]
+}

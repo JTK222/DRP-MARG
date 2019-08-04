@@ -1,0 +1,215 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://dark-roleplay.net/files/json_schemas/mods/marg/texture_generator/TextureGenerator.json",
+  "title": "MARG - Texture Generator",
+  "description": "This file is used to automatically generate Texture Files",
+  "type": "object",
+  "required": [
+    "version",
+    "type",
+    "tasks"
+  ],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "description": "This generator will be re-run if the version of the last execution is lower than the current one."
+    },
+    "type": {
+      "type": "string",
+      "description": "The type for this Material e.g. 'wood'"
+    },
+    "required_textures": {
+      "type": "array",
+      "description": "A list of ResourceLocations, all textures (e.g. overlays and masks) that you want to use, need to be listed here",
+      "additionalItems": false,
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "(.+:.+)"
+      }
+    },
+    "tasks": {
+      "type": "array",
+      "description": "A list of Tasks this texture Generator will do",
+      "additionalItems": false,
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "input_type",
+          "output_type",
+          "output"
+        ],
+        "if": {
+          "not": {
+            "properties": {
+              "input_type": {
+                "const": "none"
+              }
+            }
+          }
+        },
+        "then": {
+          "required": [
+            "input"
+          ]
+        }
+      },
+      "properties": {
+        "input_type": {
+          "type": "string",
+          "description": "The type of the texture input source\n allowed: \nnone - uses empty texture\n supply - use a texture from the required_textures\n material - use a texture from a Material e.g. 'planks'\n cache - use a texture previously generated that was put into the cache",
+          "enum": [
+            "none",
+            "supply",
+            "material",
+            "cache"
+          ]
+        },
+        "input": {
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "output_type": {
+          "type": "string",
+          "enum": [
+            "file",
+            "cache",
+            "global_cache"
+          ]
+        },
+        "output": {
+          "type": "string",
+          "pattern": "(.+:.+)"
+        },
+        "manipulations": {
+          "type": "array",
+          "additionalItems": false,
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "type"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "none",
+                  "mask",
+                  "overlay",
+                  "flip",
+                  "rotate"
+                ]
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "enum": [
+                        "mask",
+                        "overlay"
+                      ]
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "cached_texture": {
+                      "type": "string"
+                    },
+                    "texture": {
+                      "type": "integer"
+                    }
+                  },
+                  "oneOf": [
+                    {
+                      "required": [
+                        "cached_texture"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "texture"
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "rotate"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "angle": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 360
+                    }
+                  },
+                  "required": [
+                    "angle"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "rotate"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "angle": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 360
+                    }
+                  },
+                  "required": [
+                    "angle"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "flip"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "axis": {
+                      "type": "string",
+                      "enum": [
+                        "x",
+                        "y"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "axis"
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

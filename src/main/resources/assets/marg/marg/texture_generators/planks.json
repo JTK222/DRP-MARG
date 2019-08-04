@@ -1,0 +1,12 @@
+{
+  "version": 0,
+  "type": "wood",
+  "tasks": [
+    {
+      "input_type": "material",
+      "input": "planks",
+      "output_type": "file",
+      "output": "marg:textures/block/planks/%wood%_planks"
+    }
+  ]
+}
