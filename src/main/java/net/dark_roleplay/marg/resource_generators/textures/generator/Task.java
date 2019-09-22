@@ -1,13 +1,11 @@
-package net.dark_roleplay.marg.assets.textures.generator;
+package net.dark_roleplay.marg.resource_generators.textures.generator;
 
 import com.google.gson.stream.JsonReader;
 import net.dark_roleplay.marg.Marg;
 import net.dark_roleplay.marg.api.materials.Material;
-import net.dark_roleplay.marg.assets.textures.TextureCache;
-import net.dark_roleplay.marg.handler.LogHelper;
-import net.dark_roleplay.marg.helpers.FileHelpers;
-import net.dark_roleplay.marg.objects.other.generators.textures.TextureGeneratorCache;
-import net.minecraft.util.ResourceLocation;
+import net.dark_roleplay.marg.resource_generators.textures.TextureCache;
+import net.dark_roleplay.marg.helpers.LogHelper;
+import net.dark_roleplay.marg.helpers.FileHelper;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -28,7 +26,7 @@ public class Task {
     public boolean needsToGenerate(Material mat) {
         if (outputType != OutputType.FILE)
             return false;
-        return !FileHelpers.doesFileExistClient(mat.getType().getNamed(outputName, mat));
+        return !FileHelper.doesFileExistClient(mat.getType().getNamed(outputName, mat));
     }
 
     public Task(JsonReader reader) throws IOException {

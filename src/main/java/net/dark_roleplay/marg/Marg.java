@@ -1,22 +1,23 @@
 package net.dark_roleplay.marg;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-
+import net.dark_roleplay.marg.api.MaterialRegistry;
 import net.dark_roleplay.marg.api.materials.Material;
 import net.dark_roleplay.marg.api.materials.MaterialType;
-import net.dark_roleplay.marg.assets.reaload_listeners.TextureGenReloadListener;
-import net.dark_roleplay.marg.handler.MaterialRegistry;
 import net.dark_roleplay.marg.objects.other.MargResourcePackFinder;
-import net.dark_roleplay.marg.objects.resources.GeneratorReloadListener;
+import net.dark_roleplay.marg.resource_generators.textures.TextureGenReloadListener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLEnvironment;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
 @Mod(Marg.MODID)
 public class Marg {
@@ -33,15 +34,19 @@ public class Marg {
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::loadComplete);
 		setupFolders();
 		setupVanillaMaterials();
+
+		if(FMLEnvironment.dist == Dist.CLIENT){
+			Minecraft.getInstance().getResourcePackList().addPackFinder(new MargResourcePackFinder(FOLDER_ASSETS, "Generated Asset Holder"));
+
+			if(Minecraft.getInstance().getResourceManager() instanceof IReloadableResourceManager) {
+				((IReloadableResourceManager) Minecraft.getInstance().getResourceManager()).addReloadListener(new TextureGenReloadListener());
+			}
+		}
+
 	}
 
 	public void setupClientStuff(FMLClientSetupEvent event) {
-		Minecraft.getInstance().getResourcePackList().addPackFinder(new MargResourcePackFinder(FOLDER_ASSETS, "Generated Asset Holder"));
 
-		if(Minecraft.getInstance().getResourceManager() instanceof IReloadableResourceManager) {
-			((IReloadableResourceManager) Minecraft.getInstance().getResourceManager()).addReloadListener(new GeneratorReloadListener());
-			((IReloadableResourceManager) Minecraft.getInstance().getResourceManager()).addReloadListener(new TextureGenReloadListener());
-		}
 	}
 
 	public void loadComplete(FMLLoadCompleteEvent event) {

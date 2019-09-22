@@ -1,6 +1,6 @@
-package net.dark_roleplay.marg.assets.textures;
+package net.dark_roleplay.marg.resource_generators.textures;
 
-import net.dark_roleplay.marg.handler.LogHelper;
+import net.dark_roleplay.marg.helpers.LogHelper;
 
 import java.awt.image.BufferedImage;
 import java.util.HashMap;

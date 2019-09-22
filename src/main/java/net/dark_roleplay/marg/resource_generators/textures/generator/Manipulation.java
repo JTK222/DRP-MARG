@@ -1,9 +1,8 @@
-package net.dark_roleplay.marg.assets.textures.generator;
+package net.dark_roleplay.marg.resource_generators.textures.generator;
 
 import com.google.gson.stream.JsonReader;
-import net.dark_roleplay.marg.assets.textures.TextureCache;
-import net.dark_roleplay.marg.handler.LogHelper;
-import net.dark_roleplay.marg.objects.other.generators.textures.TextureEditors;
+import net.dark_roleplay.marg.resource_generators.textures.TextureCache;
+import net.dark_roleplay.marg.resource_generators.textures.editors.TextureEditors;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;

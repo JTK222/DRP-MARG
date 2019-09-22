@@ -1,4 +1,4 @@
-package net.dark_roleplay.marg.assets;
+package net.dark_roleplay.marg.resource_generators;
 
 import net.dark_roleplay.marg.api.materials.Material;
 

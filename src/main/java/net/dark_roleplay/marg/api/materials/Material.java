@@ -14,7 +14,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
 import net.dark_roleplay.marg.api.exceptions.InvalidTextureType;
-import net.dark_roleplay.marg.handler.LogHelper;
+import net.dark_roleplay.marg.helpers.LogHelper;
 import net.dark_roleplay.marg.objects.other.generators.TextureGeneratorType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;

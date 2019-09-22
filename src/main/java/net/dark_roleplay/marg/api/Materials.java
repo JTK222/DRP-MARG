@@ -3,7 +3,6 @@ package net.dark_roleplay.marg.api;
 import java.util.Set;
 
 import net.dark_roleplay.marg.api.materials.Material;
-import net.dark_roleplay.marg.handler.MaterialRegistry;
 
 public class Materials {
 

@@ -1,5 +1,5 @@
 modLoader="javafml" #mandatory
-loaderVersion="[26,)" #mandatory (24 is current forge version)
+loaderVersion="[28,)" #mandatory (24 is current forge version)
 issueTrackerURL="http://my.issue.tracker/" #optional
 
 [[mods]]
@@ -21,6 +21,6 @@ Additionally to this, they can also automatically generate assets, like textures
 [[dependencies.drpmedieval]] #optional
     modId="forge" #mandatory
     mandatory=true #mandatory
-    versionRange="[25,)" #mandatory
+    versionRange="[28,)" #mandatory
     ordering="NONE"
     side="BOTH"

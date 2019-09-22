@@ -1,4 +1,4 @@
-package net.dark_roleplay.marg.objects.other.generators.textures;
+package net.dark_roleplay.marg.resource_generators.textures.editors;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;

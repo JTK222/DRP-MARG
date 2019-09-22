@@ -4,7 +4,6 @@ import java.util.function.Consumer;
 
 import net.dark_roleplay.marg.api.materials.Material;
 import net.dark_roleplay.marg.api.materials.MaterialType;
-import net.dark_roleplay.marg.handler.MaterialRegistry;
 
 /**
  * A small helper to easily do operations using Materials

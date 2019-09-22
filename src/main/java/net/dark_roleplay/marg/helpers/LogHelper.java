@@ -1,4 +1,4 @@
-package net.dark_roleplay.marg.handler;
+package net.dark_roleplay.marg.helpers;
 
 import java.io.File;
 import java.io.FileOutputStream;
