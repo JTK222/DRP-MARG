@@ -10,36 +10,30 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-apply plugin: 'eclipse'
+apply plugin: 'idea'
 apply plugin: 'maven-publish'
 
-version = '1.14.4-0.1.5.1'
+version = '1.14.4-0.2.6'
 group = 'net.dark_roleplay'
 archivesBaseName = 'marg'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
+apply from: 'https://dark-roleplay.net/files/gradle_helpers/1.14.4/launch.php?type=client'
+apply from: 'https://dark-roleplay.net/files/gradle_helpers/1.14.4/launch.php?type=server'
+
 minecraft {
     mappings channel: 'snapshot', version: '20190906-1.14.3'
     runs {
-        client {
-            workingDirectory project.file('run')
+        data {
+            workingDirectory project.file('runs/data_gen')
+
             property 'forge.logging.markers', ''
             property 'forge.logging.console.level', 'debug'
-            property 'forge.logging.noansi', "false"
 
             ideaModule "${project.name}.main"
 
-            environment 'MOD_CLASSES', "${project.file("out/production//resources").canonicalPath};${project.file("out/production//classes").canonicalPath}"
-        }
-
-        server {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', ''
-            property 'forge.logging.console.level', 'debug'
-            property 'forge.logging.noansi', "false"
-
-            ideaModule "${project.name}.main"
+            args '--mod', 'drpmedieval', '--all', '--output', file('src/generated/resources/')
 
             environment 'MOD_CLASSES', "${project.file("out/production//resources").canonicalPath};${project.file("out/production//classes").canonicalPath}"
         }
@@ -66,5 +60,4 @@ jar {
 
 apply from: 'https://dark-roleplay.net/files/gradle_helpers/1.14.2/mods_toml.gradle'
 
-// Publishing
-apply from: 'https://dark-roleplay.net/files/gradle_helpers/1.14.2/publishing.gradle'
+apply from: 'https://dark-roleplay.net/files/gradle_helpers/1.14.4/general.gradle'

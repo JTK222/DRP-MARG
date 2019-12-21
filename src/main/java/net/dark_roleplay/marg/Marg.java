@@ -1,26 +1,68 @@
 package net.dark_roleplay.marg;
 
-import net.dark_roleplay.marg.api.MaterialRegistry;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonReader;
 import net.dark_roleplay.marg.api.materials.Material;
-import net.dark_roleplay.marg.api.materials.MaterialType;
-import net.dark_roleplay.marg.objects.other.MargResourcePackFinder;
-import net.dark_roleplay.marg.resource_generators.textures.TextureGenReloadListener;
+import net.dark_roleplay.marg.api.materials.MaterialRequirement;
+import net.dark_roleplay.marg.generators.text.TextGenReloadListener;
+import net.dark_roleplay.marg.generators.text.TextGenerator;
+import net.dark_roleplay.marg.generators.textures.generator.TextureGenerator;
+import net.dark_roleplay.marg.generators.textures.manipulation.Manipulation;
+import net.dark_roleplay.marg.util.gson.generators.text.TextGeneratorAdapter;
+import net.dark_roleplay.marg.util.gson.generators.textures.ManipulationAdapter;
+import net.dark_roleplay.marg.util.gson.generators.textures.TextureGeneratorAdapter;
+import net.dark_roleplay.marg.util.gson.materials.MaterialAdapter;
+import net.dark_roleplay.marg.generators.textures.TextureGenReloadListener;
+import net.dark_roleplay.marg.generators.textures.task.Task;
+import net.dark_roleplay.marg.util.gson.generators.textures.TaskAdapter;
+import net.dark_roleplay.marg.util.gson.materials.MaterialRequirementAdapter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.IReloadableResourceManager;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourcePackList;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.api.distmarker.OnlyIns;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.LogicalSidedProvider;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 
 @Mod(Marg.MODID)
 public class Marg {
+
+	public static final Logger LOGGER = LogManager.getLogger();
+
+	public static final Gson MARG_GSON;
+	public static boolean wasInitialized = false;
+
+	static{
+		GsonBuilder builder = new GsonBuilder();
+
+		builder.registerTypeAdapter(Material.class, new MaterialAdapter());
+
+		builder.registerTypeAdapter(MaterialRequirement.class, new MaterialRequirementAdapter());
+
+		builder.registerTypeAdapter(TextureGenerator.class, new TextureGeneratorAdapter());
+		builder.registerTypeAdapter(Task.class, new TaskAdapter());
+		builder.registerTypeAdapter(Manipulation.class, new ManipulationAdapter());
+
+		builder.registerTypeAdapter(TextGenerator.class, new TextGeneratorAdapter());
+
+		MARG_GSON = builder.create();
+		setupVanillaMaterials();
+	}
 
 	public static final String	MODID	= "marg";
 
@@ -30,29 +72,16 @@ public class Marg {
 	public static File			FOLDER_DATA;
 
 	public Marg() {
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClientStuff);
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::loadComplete);
 		setupFolders();
-		setupVanillaMaterials();
 
-		if(FMLEnvironment.dist == Dist.CLIENT){
-			Minecraft.getInstance().getResourcePackList().addPackFinder(new MargResourcePackFinder(FOLDER_ASSETS, "Generated Asset Holder"));
-
-			if(Minecraft.getInstance().getResourceManager() instanceof IReloadableResourceManager) {
-				((IReloadableResourceManager) Minecraft.getInstance().getResourceManager()).addReloadListener(new TextureGenReloadListener());
-			}
-		}
-
-	}
-
-	public void setupClientStuff(FMLClientSetupEvent event) {
-
+		DistExecutor.runWhenOn(Dist.CLIENT, () -> MargClient::run);
 	}
 
 	public void loadComplete(FMLLoadCompleteEvent event) {
-		MaterialRegistry.getMaterials().forEach(mat -> {
-			mat.printDebug();
-		});
+		//TODO add Debug Printing
+//		Material.getMaterials().forEach(mat -> {
+//			mat.printDebug();
+//		});
 	}
 
 	private void setupFolders() {
@@ -75,19 +104,9 @@ public class Marg {
 		}
 	}
 
-	public void setupVanillaMaterials() {
-		MaterialType	woodType	= new MaterialType("wood");
-		String[]		woods		= {"acacia", "birch", "dark_oak", "jungle", "oak", "spruce"};
-
-		for(String wood : woods) {
-			Material mat = new Material(woodType, wood, String.format("drpmaarg.material.%s", wood));
-			mat.setTexture("log_side", new ResourceLocation("minecraft", String.format("textures/block/%s_log.png", wood)));
-			mat.setTexture("log_top", new ResourceLocation("minecraft", String.format("textures/block/%s_log_top.png", wood)));
-			mat.setTexture("stripped_log_side", new ResourceLocation("minecraft", String.format("textures/block/stripped_%s_log.png", wood)));
-			mat.setTexture("stripped_log_top", new ResourceLocation("minecraft", String.format("textures/block/stripped_%s_log_top.png", wood)));
-			mat.setTexture("planks", new ResourceLocation("minecraft", String.format("textures/block/%s_planks.png", wood)));
-
-			MaterialRegistry.register(mat);
-		}
+	public static void setupVanillaMaterials() {
+		JsonReader reader = new JsonReader(new InputStreamReader(Marg.class.getClassLoader().getResourceAsStream("data/marg/marg_materials/vanilla_wood.json")));
+		MARG_GSON.fromJson(reader, Material.class);
+		wasInitialized = true;
 	}
 }
