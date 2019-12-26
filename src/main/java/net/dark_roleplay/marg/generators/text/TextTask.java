@@ -1,7 +1,8 @@
 package net.dark_roleplay.marg.generators.text;
 
 import net.dark_roleplay.marg.Marg;
-import net.dark_roleplay.marg.api.materials.Material;
+import net.dark_roleplay.marg.api.materials.IMaterial;
+import net.dark_roleplay.marg.impl.materials.MargMaterial;
 import net.dark_roleplay.marg.util.FileHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.IResource;
@@ -25,8 +26,8 @@ public class TextTask {
         this.output = output;
     }
 
-    public boolean needsToGenerate(Material mat, Set<String> customKeys) {
-        return !FileHelper.doesFileExistClient(mat.getTextProv().searchAndReplace(output));
+    public boolean needsToGenerate(MargMaterial mat, Set<String> customKeys) {
+        return !FileHelper.doesFileExistClient(mat.getTextProvider().apply(output));
     }
 
     public void prepareTask() {
@@ -47,16 +48,16 @@ public class TextTask {
         }
     }
 
-    public void generate(Set<Material> materials, Set<String> customKeys, boolean isClient) {
+    public void generate(Set<IMaterial> materials, Set<String> customKeys, boolean isClient) {
         if(this.hasErrored) return;
         if(materials == null && customKeys != null){
             for(String custom : customKeys){
                 writeToFile(isClient, output.replace("${custom}", custom), inputString.replaceAll("\\$\\{custom}", custom));
             }
         }else if(materials != null){
-            for(Material mat : materials){
-                String matOut = mat.getTextProv().searchAndReplace(output);
-                String matInput = mat.getTextProv().searchAndReplace(inputString);
+            for(IMaterial mat : materials){
+                String matOut = mat.getTextProvider().apply(output);
+                String matInput = mat.getTextProvider().apply(inputString);
                 if(matOut.contains("${custom}")){
                     for(String custom : customKeys){
                         writeToFile(isClient, matOut.replace("${custom}", custom), matInput.replaceAll("\\$\\{custom}", custom));

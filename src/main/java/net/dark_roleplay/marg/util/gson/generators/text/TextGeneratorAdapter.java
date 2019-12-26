@@ -1,11 +1,10 @@
 package net.dark_roleplay.marg.util.gson.generators.text;
 
-import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import net.dark_roleplay.marg.Marg;
-import net.dark_roleplay.marg.api.materials.MaterialRequirement;
+import net.dark_roleplay.marg.impl.materials.MargMaterialRequirement;
 import net.dark_roleplay.marg.generators.text.TextGenerator;
 import net.dark_roleplay.marg.generators.text.TextTask;
 import net.minecraft.util.ResourceLocation;
@@ -23,7 +22,7 @@ public class TextGeneratorAdapter  extends TypeAdapter<TextGenerator> {
 
     @Override
     public TextGenerator read(JsonReader in) throws IOException {
-        MaterialRequirement requirements = null;
+        MargMaterialRequirement requirements = null;
         Set<String> customKeys = null;
         Set<TextTask> tasks = new HashSet<>();
 
@@ -32,7 +31,7 @@ public class TextGeneratorAdapter  extends TypeAdapter<TextGenerator> {
         while(in.hasNext()){
             switch(in.nextName()){
                 case "material":
-                    requirements = Marg.MARG_GSON.fromJson(in, MaterialRequirement.class);
+                    requirements = Marg.MARG_GSON.fromJson(in, MargMaterialRequirement.class);
                     break;
                 case "custom_keys":
                     customKeys = new HashSet<>();

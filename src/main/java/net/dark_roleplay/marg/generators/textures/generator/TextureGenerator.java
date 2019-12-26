@@ -1,15 +1,16 @@
 package net.dark_roleplay.marg.generators.textures.generator;
 
 import com.google.gson.stream.JsonReader;
+import net.dark_roleplay.marg.api.MaterialTypes;
+import net.dark_roleplay.marg.api.materials.IMaterial;
 import net.dark_roleplay.marg.generators.textures.IGenerator;
 import net.dark_roleplay.marg.generators.textures.TextureCache;
 import net.dark_roleplay.marg.generators.textures.task.Task;
-import net.dark_roleplay.marg.api.materials.Material;
+import net.dark_roleplay.marg.impl.materials.MargMaterial;
 import net.dark_roleplay.marg.Marg;
 import net.dark_roleplay.marg.util.LogHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -86,7 +87,7 @@ public class TextureGenerator implements IGenerator {
     }
 
     @Override
-    public boolean needsToGenerate(Material material) {
+    public boolean needsToGenerate(MargMaterial material) {
         return Arrays.stream(this.tasks).parallel().map(task -> task.needsToGenerate(material)).reduce((a, b) -> a || b).get();
     }
 
@@ -118,7 +119,7 @@ public class TextureGenerator implements IGenerator {
     @Override
     public void generate() {
         if(!this.wasSuccessfull) return;
-        Set<Material> materials = Material.getMaterialsForType(this.type);
+        Set<IMaterial> materials = MaterialTypes.getType(this.type).getMaterials();
         for(Task task : this.tasks)task.generate(this.requiredTextures, this.localCache, globalCache, materials);
         this.localCache.clear();
     }

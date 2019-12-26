@@ -1,4 +1,4 @@
-package net.dark_roleplay.marg.api;
+package net.dark_roleplay.marg.api.constants;
 
 public final class Constants {
 
@@ -13,6 +13,7 @@ public final class Constants {
 
     public static final class WOOD_TEXTURES{
         public static final String
+                LEAVES = "leaves",
                 PLANKS = "planks",
                 LOG_TOP = "log_top",
                 LOG = "log",

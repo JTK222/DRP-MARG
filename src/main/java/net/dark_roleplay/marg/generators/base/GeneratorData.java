@@ -1,16 +1,16 @@
 package net.dark_roleplay.marg.generators.base;
 
-import net.dark_roleplay.marg.api.materials.Material;
+import net.dark_roleplay.marg.impl.materials.MargMaterial;
 
 import java.util.Set;
 
 public abstract class GeneratorData {
 
     private final int version;
-    private final Set<Material> materials;
+    private final Set<MargMaterial> materials;
     private boolean needsUpdate = false;
 
-    public GeneratorData(int version, Set<Material> materials){
+    public GeneratorData(int version, Set<MargMaterial> materials){
         this.version = version;
         this.materials = materials;
     }
@@ -23,7 +23,7 @@ public abstract class GeneratorData {
         return this.needsUpdate;
     }
 
-    public Set<Material> getMaterials(){
+    public Set<MargMaterial> getMaterials(){
         return this.materials;
     }
 

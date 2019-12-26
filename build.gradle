@@ -42,10 +42,6 @@ sourceSets {
     }
 }
 
-
-//apply from: 'https://dark-roleplay.net/files/gradle_helpers/1.14.4/launch.php?type=client'
-//apply from: 'https://dark-roleplay.net/files/gradle_helpers/1.14.4/launch.php?type=server'
-
 minecraft {
     mappings channel: 'snapshot', version: '20190906-1.14.3'
     runs {
@@ -53,8 +49,20 @@ minecraft {
             workingDirectory project.file('runs/client')
             property 'forge.logging.console.level', 'debug'
 
+            environment 'MOD_CLASSES',
+                    "archivesBaseName%%${project.file('out/production/resources').canonicalPath};" +
+                    "archivesBaseName%%${project.file('out/production/classes').canonicalPath};" +
+                    "archivesBaseName%%${project.file('out/api/resources').canonicalPath};"+
+                    "archivesBaseName%%${project.file('out/api/classes').canonicalPath};"+
+                    "archivesBaseName%%${project.file('out/generated/resources').canonicalPath}"
+        }
+
+        server {
+            workingDirectory project.file('runs/server')
+            property 'forge.logging.console.level', 'debug'
+
             mods{
-                drpmedieval{
+                archivesBaseName{
                     source sourceSets.main
                     source sourceSets.api
                     source sourceSets.generated
@@ -67,7 +75,7 @@ minecraft {
             args '--mod', 'drpmedieval', '--all', '--output', file('src/generated/resources/')
 
             mods{
-                drpmedieval{
+                archivesBaseName{
                     source sourceSets.main
                     source sourceSets.api
                     source sourceSets.generated

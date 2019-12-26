@@ -31,10 +31,10 @@ public final class Manipulation{
             case NONE:
                 return;
             case MASK:
-                pair.setImage(TextureEditors.maskImage(pair.getImage(), this.useCache ? localCache.getCachedImage(pair.getMaterial().getTextProv().searchAndReplace(this.textureName)) : requiredResources[this.textureID]));
+                pair.setImage(TextureEditors.maskImage(pair.getImage(), this.useCache ? localCache.getCachedImage(pair.getMaterial().getTextProvider().apply(this.textureName)) : requiredResources[this.textureID]));
                 break;
             case OVERLAY:
-                pair.setImage(TextureEditors.overlayImage(pair.getImage(), this.useCache ? localCache.getCachedImage(pair.getMaterial().getTextProv().searchAndReplace(this.textureName)) : requiredResources[this.textureID]));
+                pair.setImage(TextureEditors.overlayImage(pair.getImage(), this.useCache ? localCache.getCachedImage(pair.getMaterial().getTextProvider().apply(this.textureName)) : requiredResources[this.textureID]));
                 break;
             case FLIP:
                 pair.setImage(TextureEditors.flipImage(pair.getImage(), this.axis == Axis2D.X));

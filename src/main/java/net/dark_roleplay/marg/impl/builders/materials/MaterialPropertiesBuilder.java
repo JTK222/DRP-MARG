@@ -1,13 +1,15 @@
-package net.dark_roleplay.marg.api.materials;
+package net.dark_roleplay.marg.impl.builders.materials;
+
+import net.dark_roleplay.marg.impl.materials.MargMaterialProperties;
 
 public class MaterialPropertiesBuilder {
     private String materialColor = "air";
-    private float resistance = 0F;
-    private float hardness = 0F;
+    private float resistance;
+    private float hardness;
     private float slipperiness = 0.6F;
-    private int lightValue = 0;
+    private int lightValue;
     private int harvestLevel = -1;
-    private String toolType = null;
+    private String toolType;
 
     public MaterialPropertiesBuilder setMaterialColor(String materialColor) {
         this.materialColor = materialColor;
@@ -44,7 +46,7 @@ public class MaterialPropertiesBuilder {
         return this;
     }
 
-    public MaterialProperties create() {
-        return new MaterialProperties(materialColor, resistance, hardness, slipperiness, lightValue, harvestLevel, toolType);
+    public MargMaterialProperties create() {
+        return new MargMaterialProperties(materialColor, resistance, hardness, slipperiness, lightValue, harvestLevel, toolType);
     }
 }

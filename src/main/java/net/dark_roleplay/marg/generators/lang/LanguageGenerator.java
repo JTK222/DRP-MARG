@@ -7,9 +7,8 @@ import java.util.Set;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.dark_roleplay.marg.api.materials.Material;
+import net.dark_roleplay.marg.impl.materials.MargMaterial;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
 public class LanguageGenerator {
@@ -44,7 +43,7 @@ public class LanguageGenerator {
 		languageFiles = new HashMap<String, String>();
 	}
 
-	public void generateLanguages(Set<Material> materials) {
+	public void generateLanguages(Set<MargMaterial> materials) {
 		String langName = Minecraft.getInstance().gameSettings.language.toLowerCase();
 
 		for(int i = 0; i < this.translations.size(); i++ ) {
@@ -54,7 +53,7 @@ public class LanguageGenerator {
 			String		inputKey	= obj.get("inputKey").getAsString();
 
 			String		file		= languageFiles.containsKey(langName) ? languageFiles.get(langName) : "";
-			for(Material mat : materials) {
+			for(MargMaterial mat : materials) {
 				//file += outputKey.replace("%wood%", mat.getName()) + "=" + I18n.format(inputKey, mat.getTranslation()) + "\n";
 			}
 			languageFiles.put(langName, file);

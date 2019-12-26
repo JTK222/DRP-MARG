@@ -1,6 +1,7 @@
 package net.dark_roleplay.marg.generators.textures.task;
 
-import net.dark_roleplay.marg.api.materials.Material;
+import net.dark_roleplay.marg.api.materials.IMaterial;
+import net.dark_roleplay.marg.impl.materials.MargMaterial;
 import net.dark_roleplay.marg.Marg;
 import net.dark_roleplay.marg.util.FileHelper;
 import net.dark_roleplay.marg.generators.textures.TextureCache;
@@ -35,13 +36,13 @@ public class Task {
         this.outputName = outputName;
     }
 
-    public boolean needsToGenerate(Material mat) {
+    public boolean needsToGenerate(MargMaterial mat) {
         if (outputType != OutputType.FILE)
             return false;
-        return !FileHelper.doesFileExistClient(mat.getTextProv().searchAndReplace(outputName));
+        return !FileHelper.doesFileExistClient(mat.getTextProvider().apply(outputName));
     }
 
-    public void generate(BufferedImage[] requiredResources, TextureCache localCache, TextureCache globalCache, Set<Material> materials) {
+    public void generate(BufferedImage[] requiredResources, TextureCache localCache, TextureCache globalCache, Set<IMaterial> materials) {
         StringBuilder builder = new StringBuilder();
 
         Set<TexturePair> textures = new HashSet<TexturePair>();
@@ -49,26 +50,26 @@ public class Task {
         //TODO Create copies of the Images when required
         switch (this.inputType) {//TODO Implement generation
             case NONE:
-                for (Material material : materials)
+                for (IMaterial material : materials)
                     textures.add(new TexturePair(material, new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB)));
                 break;
             case MATERIAL:
-                for (Material material : materials){
-                    LazyOptional<BufferedImage> texture = material.getTextureProvider().getTexture(this.inputName);
+                for (IMaterial material : materials){
+                    LazyOptional<BufferedImage> texture = material.getGraphicsProvider().getTexture(this.inputName);
                     if(texture == null || !texture.isPresent()) ;//LogHelper.error(String.format("Tried to load not existing Texture '%s' for '%s:%s'", this.inputName, material.getType().getName(), material.getName()));
                     textures.add(new TexturePair(material, texture.orElseThrow(null)));
                 }
                 break;
             case CACHE:
-                for (Material material : materials){
-                    BufferedImage tempImage = localCache.getCachedImage(material.getTextProv().searchAndReplace(this.inputName));
-                    if(tempImage == null) LogHelper.error(material.getTextProv().searchAndReplace(String.format("Tried to load not existing Texture '%s' for '${type}:${material}' from Cache", this.inputName)));
+                for (IMaterial material : materials){
+                    BufferedImage tempImage = localCache.getCachedImage(material.getTextProvider().apply(this.inputName));
+                    if(tempImage == null) LogHelper.error(material.getTextProvider().apply(String.format("Tried to load not existing Texture '%s' for '${type}:${material}' from Cache", this.inputName)));
                     textures.add(new TexturePair(material, tempImage));
 
                 }
                 break;
             case SUPPLY:
-                for (Material material : materials)
+                for (IMaterial material : materials)
                     textures.add(new TexturePair(material, requiredResources[this.inputID]));
                 break;
         }
@@ -87,7 +88,7 @@ public class Task {
             case FILE:
                 LogHelper.info(String.format("Writing File: %s", this.outputName));
                 textures.stream().forEach(pair -> {
-                    File outputFile = new File(Marg.FOLDER_ASSETS + "/assets/" + pair.getMaterial().getTextProv().searchAndReplace(this.outputName).replaceFirst(":", "/") + ".png");
+                    File outputFile = new File(Marg.FOLDER_ASSETS + "/assets/" + pair.getMaterial().getTextProvider().apply(this.outputName).replaceFirst(":", "/") + ".png");
                     try {
                         outputFile.getParentFile().mkdirs();
                         ImageIO.write(pair.getImage(), "png", outputFile);
@@ -98,10 +99,10 @@ public class Task {
                 break;
             case CACHE:
                 //LogHelper.info(String.format("Adding File '%s' to localCache", this.outputName));
-                textures.stream().forEach(pair -> localCache.addImage(pair.getMaterial().getTextProv().searchAndReplace(this.outputName), pair.getImage()));
+                textures.stream().forEach(pair -> localCache.addImage(pair.getMaterial().getTextProvider().apply(this.outputName), pair.getImage()));
                 break;
             case GLOBAL_CACHE:
-                textures.stream().forEach(pair -> globalCache.addImage(pair.getMaterial().getTextProv().searchAndReplace(this.outputName), pair.getImage()));
+                textures.stream().forEach(pair -> globalCache.addImage(pair.getMaterial().getTextProvider().apply(this.outputName), pair.getImage()));
                 break;
         }
     }
