@@ -19,32 +19,81 @@ archivesBaseName = 'marg'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
-apply from: 'https://dark-roleplay.net/files/gradle_helpers/1.14.4/launch.php?type=client'
-apply from: 'https://dark-roleplay.net/files/gradle_helpers/1.14.4/launch.php?type=server'
+configurations {
+    apiCompile.extendsFrom(compile)
+}
+
+//apply from: 'https://dark-roleplay.net/files/gradle_helpers/1.14.4/general.php'
+//EXCLUDE ME
+sourceSets {
+    generated
+    api
+    main {
+        compileClasspath += sourceSets.api.output
+        runtimeClasspath += sourceSets.api.output
+        compileClasspath += sourceSets.generated.output
+        runtimeClasspath += sourceSets.generated.output
+    }
+    test {
+        compileClasspath += sourceSets.api.output
+        runtimeClasspath += sourceSets.api.output
+        compileClasspath += sourceSets.generated.output
+        runtimeClasspath += sourceSets.generated.output
+    }
+}
+
+
+//apply from: 'https://dark-roleplay.net/files/gradle_helpers/1.14.4/launch.php?type=client'
+//apply from: 'https://dark-roleplay.net/files/gradle_helpers/1.14.4/launch.php?type=server'
 
 minecraft {
     mappings channel: 'snapshot', version: '20190906-1.14.3'
     runs {
-        data {
-            workingDirectory project.file('runs/data_gen')
-
-            property 'forge.logging.markers', ''
+        client {
+            workingDirectory project.file('runs/client')
             property 'forge.logging.console.level', 'debug'
 
-            ideaModule "${project.name}.main"
+            mods{
+                drpmedieval{
+                    source sourceSets.main
+                    source sourceSets.api
+                    source sourceSets.generated
+                }
+            }
+        }
 
+        data {
+            workingDirectory project.file('runs/data_gen')
             args '--mod', 'drpmedieval', '--all', '--output', file('src/generated/resources/')
 
-            environment 'MOD_CLASSES', "${project.file("out/production//resources").canonicalPath};${project.file("out/production//classes").canonicalPath}"
+            mods{
+                drpmedieval{
+                    source sourceSets.main
+                    source sourceSets.api
+                    source sourceSets.generated
+                }
+            }
         }
     }
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${MC_VERSION}-${FORGE_VERSION}"
+    minecraft([
+            group   : 'net.minecraftforge',
+            name    : 'forge',
+            version : "${MC_VERSION}-${FORGE_VERSION}"
+
+    ])
 }
 
 jar {
+    from sourceSets.main.output.classesDirs
+    from sourceSets.main.output.resourcesDir
+    from sourceSets.api.output.resourcesDir
+    from sourceSets.api.output.classesDirs
+    from sourceSets.generated.output.classesDirs
+    from sourceSets.generated.output.resourcesDir
+
     manifest {
         attributes([
             "Specification-Title": "marg",
@@ -58,6 +107,47 @@ jar {
     }
 }
 
-apply from: 'https://dark-roleplay.net/files/gradle_helpers/1.14.2/mods_toml.gradle'
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
 
-apply from: 'https://dark-roleplay.net/files/gradle_helpers/1.14.4/general.gradle'
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+    from sourceSets.api.allSource
+    from sourceSets.generated.allSource
+}
+
+task apiJar(type: Jar) {
+    classifier = 'api'
+    from sourceSets.api.output
+}
+
+artifacts {
+    archives apiJar
+    archives sourcesJar
+    archives javadocJar
+}
+
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        include 'META-INF/mods.toml'
+
+        expand 'version': project.version
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'META-INF/mods.toml'
+    }
+}
+
+idea {
+    module {
+        for (String excludeDirName in ["run", "out", "runs", ".github", ".idea", "gradle"]) {
+            File excludeDir = new File(projectDir, excludeDirName)
+            excludeDirs.add(excludeDir)
+        }
+    }
+}

@@ -6,6 +6,7 @@ import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import net.dark_roleplay.marg.api.materials.Material;
 import net.dark_roleplay.marg.api.providers.TextureProvider;
+import net.minecraft.block.material.MaterialColor;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.IOException;
