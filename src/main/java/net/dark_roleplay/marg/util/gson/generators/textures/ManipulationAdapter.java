@@ -3,15 +3,16 @@ package net.dark_roleplay.marg.util.gson.generators.textures;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import net.dark_roleplay.marg.generators.textures.manipulation.Axis2D;
-import net.dark_roleplay.marg.generators.textures.manipulation.Manipulation;
-import net.dark_roleplay.marg.generators.textures.manipulation.ManipulationType;
+import net.dark_roleplay.marg.impl.builders.generators.textures.TextureManipulationBuilder;
+import net.dark_roleplay.marg.impl.generators.textures.util.Axis2D;
+import net.dark_roleplay.marg.impl.generators.textures.TextureManipulation;
+import net.dark_roleplay.marg.impl.generators.textures.util.TextureManipulationType;
 
 import java.io.IOException;
 
-public class ManipulationAdapter extends TypeAdapter<Manipulation>{
+public class ManipulationAdapter extends TypeAdapter<TextureManipulation>{
     @Override
-    public void write(JsonWriter out, Manipulation value) throws IOException {
+    public void write(JsonWriter out, TextureManipulation value) throws IOException {
         out.beginObject();
 
         out.name("nope").value("nope^nope");
@@ -20,9 +21,9 @@ public class ManipulationAdapter extends TypeAdapter<Manipulation>{
     }
 
     @Override
-    public Manipulation read(JsonReader in) throws IOException {
+    public TextureManipulation read(JsonReader in) throws IOException {
         String textureName = "";
-        ManipulationType type = ManipulationType.NONE;
+        TextureManipulationType type = TextureManipulationType.NONE;
         int textureID = 0;
         int angle = 0;
         int tint = 0xFFFFFFFF;
@@ -35,7 +36,7 @@ public class ManipulationAdapter extends TypeAdapter<Manipulation>{
 
             switch (name) {
                 case "type":
-                    type = ManipulationType.getByName(in.nextString());
+                    type = TextureManipulationType.getByName(in.nextString());
                     break;
                 case "cached_texture":
                     textureName = in.nextString();
@@ -57,6 +58,6 @@ public class ManipulationAdapter extends TypeAdapter<Manipulation>{
         }
         in.endObject();
 
-        return new Manipulation(textureName, type, textureID, angle, tint, axis, useCache);
+        return new TextureManipulationBuilder().setTextureName(textureName).setType(type).setTextureID(textureID).setAngle(angle).setTint(tint).setAxis(axis).setUseCache(useCache).createTextureManipulation();
     }
 }

@@ -11,7 +11,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import com.google.gson.stream.JsonReader;
-import net.dark_roleplay.marg.generators.textures.IGenerator;
+import net.dark_roleplay.marg.impl.generators.IGenerator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.IResource;
 import net.minecraft.resources.IResourceManager;
@@ -24,7 +24,6 @@ public class LoadingHelper {
 	public static <T extends IGenerator> CompletableFuture<T>[] loadGenerators(IResourceManager manager, Executor backgroundExecutor, String path, BiFunction<ResourceLocation, JsonReader, T> generatorGen) {
 		return manager.getAllResourceLocations(path, fileName -> fileName.endsWith(".json")).stream().map(location ->
 				CompletableFuture.<T>supplyAsync(() -> {
-					System.out.println(location);
 					try {
 						IResource resource = Minecraft.getInstance().getResourceManager().getResource(location);
 						try (JsonReader reader = new JsonReader(new BufferedReader(new InputStreamReader(resource.getInputStream())))) {

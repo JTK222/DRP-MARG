@@ -3,7 +3,7 @@ package net.dark_roleplay.marg.util.gson.generators;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import net.dark_roleplay.marg.generators.base.GeneratorData;
+import net.dark_roleplay.marg.impl.generators.GeneratorData;
 
 import java.io.IOException;
 

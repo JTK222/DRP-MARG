@@ -24,7 +24,7 @@ public class MargMaterialProperties implements IMaterialProperties {
         this.slipperiness = slipperiness;
         this.lightValue = lightValue;
         this.harvestLevel = harvestLevel;
-        this.harvestTool = ToolType.get(toolType);
+        this.harvestTool = toolType == null ? null : ToolType.get(toolType);
     }
 
     @Override

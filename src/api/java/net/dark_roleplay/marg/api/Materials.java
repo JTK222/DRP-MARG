@@ -4,6 +4,7 @@ import net.dark_roleplay.marg.api.materials.IMaterial;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class Materials {
 
@@ -18,6 +19,11 @@ public class Materials {
         if(contained != null)
             return contained;
         materials.put(name, type);
+        type.getType().addMaterial(type);
         return type;
+    }
+
+    public static Set<String> getRegisteredMaterials(){
+        return materials.keySet();
     }
 }

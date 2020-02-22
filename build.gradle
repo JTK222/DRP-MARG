@@ -13,7 +13,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'idea'
 apply plugin: 'maven-publish'
 
-version = '1.14.4-0.2.7'
+version = '1.14.4-0.3.2'
 group = 'net.dark_roleplay'
 archivesBaseName = 'marg'
 
@@ -61,26 +61,25 @@ minecraft {
             workingDirectory project.file('runs/server')
             property 'forge.logging.console.level', 'debug'
 
-            mods{
-                archivesBaseName{
-                    source sourceSets.main
-                    source sourceSets.api
-                    source sourceSets.generated
-                }
-            }
+            environment 'MOD_CLASSES',
+                    "archivesBaseName%%${project.file('out/production/resources').canonicalPath};" +
+                            "archivesBaseName%%${project.file('out/production/classes').canonicalPath};" +
+                            "archivesBaseName%%${project.file('out/api/resources').canonicalPath};"+
+                            "archivesBaseName%%${project.file('out/api/classes').canonicalPath};"+
+                            "archivesBaseName%%${project.file('out/generated/resources').canonicalPath}"
         }
 
         data {
             workingDirectory project.file('runs/data_gen')
             args '--mod', 'drpmedieval', '--all', '--output', file('src/generated/resources/')
 
-            mods{
-                archivesBaseName{
-                    source sourceSets.main
-                    source sourceSets.api
-                    source sourceSets.generated
-                }
-            }
+
+            environment 'MOD_CLASSES',
+                    "archivesBaseName%%${project.file('out/production/resources').canonicalPath};" +
+                            "archivesBaseName%%${project.file('out/production/classes').canonicalPath};" +
+                            "archivesBaseName%%${project.file('out/api/resources').canonicalPath};"+
+                            "archivesBaseName%%${project.file('out/api/classes').canonicalPath};"+
+                            "archivesBaseName%%${project.file('out/generated/resources').canonicalPath}"
         }
     }
 }
@@ -156,6 +155,36 @@ idea {
         for (String excludeDirName in ["run", "out", "runs", ".github", ".idea", "gradle"]) {
             File excludeDir = new File(projectDir, excludeDirName)
             excludeDirs.add(excludeDir)
+        }
+    }
+}
+
+def reobfFile = file("$buildDir/reobfJar/output.jar")
+def reobfArtifact = artifacts.add('default', reobfFile) {
+    type 'jar'
+    builtBy 'reobfJar'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = project.group
+            artifactId = project.archivesBaseName
+            version = project.version
+
+            artifact reobfArtifact
+            artifact apiJar
+            artifact sourcesJar
+            artifact javadocJar
+        }
+    }
+    repositories {
+        maven {
+            url System.getenv("MVN_REPO")
+            credentials {
+                username System.getenv("MVN_USER")
+                password System.getenv("MVN_PASSWORD")
+            }
         }
     }
 }

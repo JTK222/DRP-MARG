@@ -9,7 +9,7 @@ import net.dark_roleplay.marg.util.gson.GsonWrapper;
 
 import java.io.IOException;
 
-public class MaterialPropertyAdapter  extends TypeAdapter<MargMaterialProperties> {
+public class MaterialPropertyAdapter extends TypeAdapter<MargMaterialProperties> {
 
     private GsonWrapper wrapper;
 
@@ -36,6 +36,7 @@ public class MaterialPropertyAdapter  extends TypeAdapter<MargMaterialProperties
     public MargMaterialProperties read(JsonReader in) throws IOException {
         MaterialPropertiesBuilder builder = new MaterialPropertiesBuilder();
 
+        in.beginObject();
         while(in.hasNext()){
             switch(in.nextName()){
                 case "materialColor":
@@ -58,8 +59,13 @@ public class MaterialPropertyAdapter  extends TypeAdapter<MargMaterialProperties
                     break;
                 case "toolType":
                     builder.setToolType(in.nextString());
+                    break;
+                default:
+                    in.skipValue();
+                    break;
             }
         }
+        in.endObject();
 
         return builder.create();
     }

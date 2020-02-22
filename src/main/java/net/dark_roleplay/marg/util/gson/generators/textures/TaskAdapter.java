@@ -5,10 +5,9 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import net.dark_roleplay.marg.Marg;
-import net.dark_roleplay.marg.generators.textures.manipulation.Manipulation;
-import net.dark_roleplay.marg.generators.textures.task.InputType;
-import net.dark_roleplay.marg.generators.textures.task.OutputType;
-import net.dark_roleplay.marg.generators.textures.task.Task;
+import net.dark_roleplay.marg.impl.generators.textures.TextureManipulation;
+import net.dark_roleplay.marg.impl.generators.textures.util.TextureInputType;
+import net.dark_roleplay.marg.impl.generators.textures.util.TextureOutputType;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -27,9 +26,9 @@ public class TaskAdapter extends TypeAdapter<Task>{
 
     @Override
     public Task read(JsonReader in) throws IOException {
-        InputType inputType = InputType.NONE;
-        OutputType outputType = OutputType.FILE;
-        Set<Manipulation> manipulations = new HashSet<>();
+        TextureInputType inputType = TextureInputType.NONE;
+        TextureOutputType outputType = TextureOutputType.FILE;
+        Set<TextureManipulation> manipulations = new HashSet<>();
         String inputName = "none";
         int inputID = -1;
         String outputName = "none";
@@ -40,7 +39,7 @@ public class TaskAdapter extends TypeAdapter<Task>{
 
             switch (name) {
                 case "input_type":
-                    inputType = InputType.getByName(in.nextString());
+                    inputType = TextureInputType.getByName(in.nextString());
                     break;
                 case "input":
                     JsonToken type = in.peek();
@@ -52,7 +51,7 @@ public class TaskAdapter extends TypeAdapter<Task>{
                 case "manipulations":
                     in.beginArray();
                     while (in.hasNext()) {
-                        manipulations.add(Marg.MARG_GSON.fromJson(in, Manipulation.class));
+                        manipulations.add(Marg.MARG_GSON.fromJson(in, TextureManipulation.class));
                     }
                     in.endArray();
                     break;
@@ -60,7 +59,7 @@ public class TaskAdapter extends TypeAdapter<Task>{
                     outputName = in.nextString();
                     break;
                 case "output_type":
-                    outputType = OutputType.getByName(in.nextString());
+                    outputType = TextureOutputType.getByName(in.nextString());
                     break;
                 default:
                     in.skipValue();
@@ -69,6 +68,6 @@ public class TaskAdapter extends TypeAdapter<Task>{
         }
         in.endObject();
 
-        return new Task(inputType, outputType, manipulations.toArray(new Manipulation[manipulations.size()]), inputName, inputID, outputName);
+        return new Task(inputType, outputType, manipulations.toArray(new TextureManipulation[manipulations.size()]), inputName, inputID, outputName);
     }
 }

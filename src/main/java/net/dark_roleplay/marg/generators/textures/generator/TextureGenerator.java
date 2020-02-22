@@ -3,10 +3,8 @@ package net.dark_roleplay.marg.generators.textures.generator;
 import com.google.gson.stream.JsonReader;
 import net.dark_roleplay.marg.api.MaterialTypes;
 import net.dark_roleplay.marg.api.materials.IMaterial;
-import net.dark_roleplay.marg.generators.textures.IGenerator;
-import net.dark_roleplay.marg.generators.textures.TextureCache;
-import net.dark_roleplay.marg.generators.textures.task.Task;
-import net.dark_roleplay.marg.impl.materials.MargMaterial;
+import net.dark_roleplay.marg.impl.generators.IGenerator;
+import net.dark_roleplay.marg.impl.generators.textures.util.TextureCache;
 import net.dark_roleplay.marg.Marg;
 import net.dark_roleplay.marg.util.LogHelper;
 import net.minecraft.client.Minecraft;
@@ -24,15 +22,10 @@ public class TextureGenerator implements IGenerator {
     public static final TextureCache globalCache = new TextureCache();
     public TextureCache localCache;
 
-    private boolean wasSuccessfull = true;
 
     private int version = 0;
     private String type = "none";
 
-    private ResourceLocation[] requiredTextureLocs;
-    private BufferedImage[] requiredTextures;
-    private Task[]  tasks;
-    private ResourceLocation generatorLocation;
 
     public TextureGenerator(ResourceLocation file, JsonReader reader){
         try {
@@ -87,40 +80,15 @@ public class TextureGenerator implements IGenerator {
     }
 
     @Override
-    public boolean needsToGenerate(MargMaterial material) {
+    public boolean needsToGenerate(IMaterial material) {
         return Arrays.stream(this.tasks).parallel().map(task -> task.needsToGenerate(material)).reduce((a, b) -> a || b).get();
     }
 
     @Override
     public void prepareGenerator() {
-        if(!this.wasSuccessfull) return;
-        this.requiredTextures = Arrays.stream(requiredTextureLocs).parallel().map(loc -> {
-            try {
-                return Minecraft.getInstance().getResourceManager().getResource(loc);
-            } catch (IOException e) {
-                LogHelper.error(String.format("There was an error trying to load the required texture '%s' for '%s'", loc.toString(), this.generatorLocation),e);
-                e.printStackTrace();
-                return null;
-            }
-        }).map(resource -> {
-            if(resource == null) return null; //TODO Replace null with error texture
-            try (InputStream input = new BufferedInputStream(resource.getInputStream())){
-                return ImageIO.read(input);
-            } catch (IOException e) {
-                LogHelper.error(String.format("There was an error trying to load the required texture '%s' for '%s'", resource.getLocation().toString(), this.generatorLocation),e);
-                e.printStackTrace();
-                return null; //TODO Replace null with error texture
-            }
-        }).toArray(size -> new BufferedImage[size]);
-
-        this.localCache = new TextureCache(globalCache);
     }
 
     @Override
     public void generate() {
-        if(!this.wasSuccessfull) return;
-        Set<IMaterial> materials = MaterialTypes.getType(this.type).getMaterials();
-        for(Task task : this.tasks)task.generate(this.requiredTextures, this.localCache, globalCache, materials);
-        this.localCache.clear();
     }
 }
