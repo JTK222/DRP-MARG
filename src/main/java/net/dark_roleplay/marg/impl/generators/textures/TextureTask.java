@@ -1,13 +1,13 @@
 package net.dark_roleplay.marg.impl.generators.textures;
 
-import net.dark_roleplay.marg.Marg;
 import net.dark_roleplay.marg.api.materials.IMaterial;
-import net.dark_roleplay.marg.impl.generators.textures.util.TextureCache;
-import net.dark_roleplay.marg.impl.generators.textures.util.TexturePair;
-import net.dark_roleplay.marg.impl.generators.textures.util.TextureInputType;
-import net.dark_roleplay.marg.impl.generators.textures.util.TextureOutputType;
+import net.dark_roleplay.marg.util.texture.TextureCache;
+import net.dark_roleplay.marg.util.texture.TexturePair;
+import net.dark_roleplay.marg.util.texture.TextureInputType;
+import net.dark_roleplay.marg.util.texture.TextureOutputType;
 import net.dark_roleplay.marg.util.FileHelper;
-import net.dark_roleplay.marg.util.LogHelper;
+import net.dark_roleplay.marg.data.texture.TextureTaskData;
+import net.dark_roleplay.marg.util.FileUtil;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.imageio.ImageIO;
@@ -26,15 +26,18 @@ public class TextureTask {
     private final int inputID;
     private final String outputName;
 
-    private final TextureManipulation[] textureManipulations;
+    private final TextureManipulation[] manipulations;
 
-    public TextureTask(TextureInputType inputType, TextureOutputType outputType, String inputName, int inputID, String outputName, TextureManipulation[] textureManipulations){
-        this.inputType = inputType;
-        this.outputType = outputType;
-        this.inputName = inputName;
-        this.inputID = inputID;
-        this.outputName = outputName;
-        this.textureManipulations = textureManipulations;
+    public TextureTask(TextureTaskData data){
+        this.inputType = data.getInputType();
+        this.outputType = data.getOutputType();
+        this.inputName = data.getInputName();
+        this.inputID = data.getInputID();
+        this.outputName = data.getOutputName();
+        this.manipulations = new TextureManipulation[data.getManipulations().length];
+        for(int i = 0; i < this.manipulations.length; i++){
+            this.manipulations[i] = new TextureManipulation(data.getManipulations()[i]);
+        }
     }
 
     public boolean needsToGenerate(IMaterial mat) {
@@ -58,15 +61,13 @@ public class TextureTask {
                 for (IMaterial material : materials) {
                     LazyOptional<BufferedImage> texture = material.getGraphicsProvider().getTexture(this.inputName);
                     if (texture == null || !texture.isPresent())
-                        ;//LogHelper.error(String.format("Tried to load not existing Texture '%s' for '%s:%s'", this.inputName, material.getType().getName(), material.getName()));
+                        ;//LogHelper.error(String.format("Tried to load not existing Texture '%s' for '%s:%s'", this.inputName, material.getMaterialTypeName().getName(), material.getName()));
                     textures.add(new TexturePair(material, texture.orElseThrow(null)));
                 }
                 break;
             case CACHE:
                 for (IMaterial material : materials) {
                     BufferedImage tempImage = localCache.getCachedImage(material.getTextProvider().apply(this.inputName));
-                    if (tempImage == null)
-                        LogHelper.error(material.getTextProvider().apply(String.format("Tried to load not existing Texture '%s' for '${type}:${material}' from Cache", this.inputName)));
                     textures.add(new TexturePair(material, tempImage));
 
                 }
@@ -82,23 +83,26 @@ public class TextureTask {
         });
 
         textures.parallelStream().forEach(pair -> {
-            for (TextureManipulation manipulation : this.textureManipulations) {
-                manipulation.apply(requiredResources, localCache, pair);
+            try {
+                for (TextureManipulation manipulation : this.manipulations) {
+                    manipulation.apply(requiredResources, localCache, pair);
+                }
+            }catch(Exception e){
+                e.printStackTrace();
             }
         });
 
         switch (this.outputType) {
             case FILE:
-                LogHelper.info(String.format("Writing File: %s", this.outputName));
                 textures.stream().forEach(pair -> {
-                    File outputFile = new File(Marg.FOLDER_ASSETS + "/assets/" + pair.getMaterial().getTextProvider().apply(this.outputName).replaceFirst(":", "/") + ".png");
                     try {
+                        File outputFile = new File(FileUtil.RESOURCE_PACK_FOLDER + "/assets/" + pair.getMaterial().getTextProvider().apply(this.outputName).replaceFirst(":", "/") + ".png");
                         outputFile.getParentFile().mkdirs();
                         ImageIO.write(pair.getImage(), "png", outputFile);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                });
+        });
                 break;
             case CACHE:
                 //LogHelper.info(String.format("Adding File '%s' to localCache", this.outputName));

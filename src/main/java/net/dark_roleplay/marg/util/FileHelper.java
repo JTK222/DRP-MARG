@@ -3,21 +3,20 @@ package net.dark_roleplay.marg.util;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
-import net.dark_roleplay.marg.Marg;
 import net.minecraft.util.ResourceLocation;
 
 public class FileHelper {
 
     public static boolean doesFileExistClient(String string) {
         ResourceLocation loc = new ResourceLocation(string);
-        File file = new File(Marg.FOLDER_ASSETS, String.format("assets/%s/%s", loc.getNamespace(), loc.getPath()));
+        File file = new File(FileUtil.RESOURCE_PACK_FOLDER, String.format("assets/%s/%s", loc.getNamespace(), loc.getPath()));
 
         return file.exists();
     }
 
     public static File getFileClient(String string) {
         ResourceLocation loc = new ResourceLocation(string);
-        File file = new File(Marg.FOLDER_ASSETS, String.format("assets/%s/%s", loc.getNamespace(), loc.getPath()));
+        File file = new File(FileUtil.RESOURCE_PACK_FOLDER, String.format("assets/%s/%s", loc.getNamespace(), loc.getPath()));
 
         return file;
     }

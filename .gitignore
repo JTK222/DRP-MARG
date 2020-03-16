@@ -25,3 +25,4 @@ run
 forge*changelog.txt
 runs
 src/main/resources/assets/drpmedieval
+src/test

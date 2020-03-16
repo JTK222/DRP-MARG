@@ -1,0 +1,27 @@
+{
+	"generatorVersion": 0,
+	"material": {
+		"type": "wood",
+		"textures": [
+			"log_top",
+			"log"
+		]
+	},
+	"customKeys": [
+		"straight_cross",
+		"diagonal_bt",
+		"diagonal_lr",
+		"cross",
+		"dense_diamond"
+	],
+	"tasks": [
+		{
+			"input": "marg:marg/jsons/debug.json",
+			"output": "marg:models/${material}_${custom}_test.json"
+		},
+		{
+			"input": "marg:marg/jsons/debug.json",
+			"output": "marg:models/${material}_test2.json"
+		}
+	]
+}

@@ -1,0 +1,153 @@
+[
+  {
+    "type": "wood",
+    "name": "oak",
+    "textures": {
+      "leaves": "minecraft:block/oak_leaves",
+      "log": "minecraft:block/oak_log",
+      "log_top": "minecraft:block/oak_log_top",
+      "stripped_log": "minecraft:block/stripped_oak_log",
+      "stripped_log_top": "minecraft:block/stripped_oak_log_top",
+      "planks": "minecraft:block/oak_planks"
+    },
+    "properties": {
+      "materialColor": "wood",
+      "resistance": 3.0,
+      "hardness": 2.0,
+      "harvestLevel": 0,
+      "harvestTool": "axe"
+    },
+    "items": {
+      "log": "oak_log",
+      "stripped_log": "stripped_oak_log",
+      "planks": "oak_planks",
+      "leaves": "oak_leaves"
+    },
+    "blocks": {
+      "log": "oak_log",
+      "stripped_log": "stripped_oak_log",
+      "planks": "oak_planks",
+      "leaves": "oak_leaves"
+    }
+  },
+  {
+    "type": "wood",
+    "name": "birch",
+    "textures": {
+      "leaves": "minecraft:block/birch_leaves",
+      "log": "minecraft:block/birch_log",
+      "log_top": "minecraft:block/birch_log_top",
+      "stripped_log": "minecraft:block/stripped_birch_log",
+      "stripped_log_top": "minecraft:block/stripped_birch_log_top",
+      "planks": "minecraft:block/birch_planks"
+    },
+    "items": {
+      "log": "birch_log",
+      "stripped_log": "stripped_birch_log",
+      "planks": "birch_planks",
+      "leaves": "birch_leaves"
+    },
+    "blocks": {
+      "log": "birch_log",
+      "stripped_log": "stripped_birch_log",
+      "planks": "birch_planks",
+      "leaves": "birch_leaves"
+    }
+  },
+  {
+    "type": "wood",
+    "name": "spruce",
+    "textures": {
+      "leaves": "minecraft:block/spruce_leaves",
+      "log": "minecraft:block/spruce_log",
+      "log_top": "minecraft:block/spruce_log_top",
+      "stripped_log": "minecraft:block/stripped_spruce_log",
+      "stripped_log_top": "minecraft:block/stripped_spruce_log_top",
+      "planks": "minecraft:block/spruce_planks"
+    },
+    "items": {
+      "log": "spruce_log",
+      "stripped_log": "stripped_spruce_log",
+      "planks": "spruce_planks",
+      "leaves": "spruce_leaves"
+    },
+    "blocks": {
+      "log": "spruce_log",
+      "stripped_log": "stripped_spruce_log",
+      "planks": "spruce_planks",
+      "leaves": "spruce_leaves"
+    }
+  },
+  {
+    "type": "wood",
+    "name": "jungle",
+    "textures": {
+      "leaves": "minecraft:block/jungle_leaves",
+      "log": "minecraft:block/jungle_log",
+      "log_top": "minecraft:block/jungle_log_top",
+      "stripped_log": "minecraft:block/stripped_jungle_log",
+      "stripped_log_top": "minecraft:block/stripped_jungle_log_top",
+      "planks": "minecraft:block/jungle_planks"
+    },
+    "items": {
+      "log": "jungle_log",
+      "stripped_log": "stripped_jungle_log",
+      "planks": "jungle_planks",
+      "leaves": "jungle_leaves"
+    },
+    "blocks": {
+      "log": "jungle_log",
+      "stripped_log": "stripped_jungle_log",
+      "planks": "jungle_planks",
+      "leaves": "jungle_leaves"
+    }
+  },
+  {
+    "type": "wood",
+    "name": "dark_oak",
+    "textures": {
+      "leaves": "minecraft:block/dark_oak_leaves",
+      "log": "minecraft:block/dark_oak_log",
+      "log_top": "minecraft:block/dark_oak_log_top",
+      "stripped_log": "minecraft:block/stripped_dark_oak_log",
+      "stripped_log_top": "minecraft:block/stripped_dark_oak_log_top",
+      "planks": "minecraft:block/dark_oak_planks"
+    },
+    "items": {
+      "log": "dark_oak_log",
+      "stripped_log": "stripped_dark_oak_log",
+      "planks": "dark_oak_planks",
+      "leaves": "dark_oak_leaves"
+    },
+    "blocks": {
+      "log": "dark_oak_log",
+      "stripped_log": "stripped_dark_oak_log",
+      "planks": "dark_oak_planks",
+      "leaves": "dark_oak_leaves"
+    }
+  },
+  {
+    "type": "wood",
+    "name": "acacia",
+    "textures": {
+      "leaves": "minecraft:block/acacia_leaves",
+      "log": "minecraft:block/acacia_log",
+      "log_top": "minecraft:block/acacia_log_top",
+      "stripped_log": "minecraft:block/stripped_acacia_log",
+      "stripped_log_top": "minecraft:block/stripped_acacia_log_top",
+      "planks": "minecraft:block/acacia_planks"
+    },
+    "items": {
+      "log": "acacia_log",
+      "stripped_log": "stripped_acacia_log",
+      "planks": "acacia_planks",
+      "leaves": "acacia_leaves"
+    },
+    "blocks": {
+      "log": "acacia_log",
+      "stripped_log": "stripped_acacia_log",
+      "planks": "acacia_planks",
+      "leaves": "acacia_leaves"
+    }
+  }
+]

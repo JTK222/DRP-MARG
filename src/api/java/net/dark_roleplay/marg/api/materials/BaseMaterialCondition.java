@@ -1,6 +1,6 @@
 package net.dark_roleplay.marg.api.materials;
 
-import net.dark_roleplay.marg.api.MaterialTypes;
+import net.dark_roleplay.marg.api.MargAPI;
 import net.dark_roleplay.marg.api.provider.IGraphicsProvider;
 
 import java.util.HashSet;
@@ -23,7 +23,7 @@ public class BaseMaterialCondition implements IMaterialCondition {
 		if(gatheredMaterials != null) return gatheredMaterials;
 
 		Set<IMaterial> materials = new HashSet<>();
-		IMaterialType type = MaterialTypes.getType(this.type);
+		IMaterialType type = MargAPI.getMaterialTypes().getType(this.type);
 		for(IMaterial material : type.getMaterials()){
 			if(doesAccept(material))
 				materials.add(material);

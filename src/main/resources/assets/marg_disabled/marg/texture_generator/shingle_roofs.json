@@ -1,0 +1,26 @@
+{
+	"generatorVersion": 0,
+	"material": {
+		"type": "wood",
+		"textures": [
+			"stripped_log"
+		]
+	},
+	"requiredTextures": [
+		"marg:textures/shingle_roof.png"
+	],
+	"tasks": [
+		{
+			"inputType": "material",
+			"inputName": "stripped_log",
+			"manipulations": [
+				{
+					"type": "overlay",
+					"textureID": 0
+				}
+			],
+			"outputType": "file",
+			"outputName": "drpmedieval:textures/block/shingle_roofs/${material}_shingles"
+		}
+	]
+}

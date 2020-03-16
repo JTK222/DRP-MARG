@@ -10,7 +10,7 @@ public interface IMaterialCondition {
 
     /**
      * Passed in {@link Consumer} will be executed for all materials that do
-     * fulfill this requirements, and belong to this {@link MaterialType}
+     * fulfill this requirements, and belong to this {@link IMaterialType}
      *
      * @param consumer
      */

@@ -3,27 +3,35 @@ package net.dark_roleplay.marg.impl.generators.text;
 import net.dark_roleplay.marg.api.materials.IMaterial;
 import net.dark_roleplay.marg.api.materials.IMaterialCondition;
 import net.dark_roleplay.marg.impl.generators.IGenerator;
-import net.dark_roleplay.marg.util.ILoggable;
+import net.dark_roleplay.marg.data.text.TextGeneratorData;
+import net.dark_roleplay.marg.data.text.TextTaskData;
+import net.dark_roleplay.marg.impl.materials.MargMaterialCondition;
+import net.minecraft.resources.IResourceManager;
 
-import java.io.IOException;
-import java.io.Writer;
+import java.util.HashSet;
 import java.util.Set;
 
-public class TextGenerator implements IGenerator<TextGenerator>, ILoggable {
+public class TextGenerator implements IGenerator<TextGenerator> {
 
     private int version = 0;
     private IMaterialCondition materialRequirements;
 
-    private final Set<String> customKeys;
+    private final String[] customKeys;
     private Set<TextTask> tasks;
     private boolean isClient;
+    private IResourceManager resourceManager;
 
-    public TextGenerator(int version, boolean isClient, IMaterialCondition materialRequirements, Set<String> customKeys, Set<TextTask> tasks){
-        this.version = version;
+    //TODO Implement Side Check
+    public TextGenerator(TextGeneratorData data, IResourceManager resourceManager, boolean isClient){
+        this.version = data.getGeneratorVersion();
         this.isClient = isClient;
-        this.customKeys = customKeys;
-        this.materialRequirements = materialRequirements;
-        this.tasks = tasks;
+        this.customKeys = data.getCustomKeys();
+        this.materialRequirements = new MargMaterialCondition(data.getMaterial());
+        this.tasks = new HashSet<>();
+        for(TextTaskData taskData : data.getTasks()){
+            tasks.add(new TextTask(taskData));
+        }
+        this.resourceManager = resourceManager;
     }
 
     @Override
@@ -39,7 +47,7 @@ public class TextGenerator implements IGenerator<TextGenerator>, ILoggable {
     @Override
     public TextGenerator prepareGenerator() {
         for(TextTask task : tasks){
-            task.prepareTask();
+            task.prepareTask(this.resourceManager);
         }
         return this;
     }
@@ -66,7 +74,7 @@ public class TextGenerator implements IGenerator<TextGenerator>, ILoggable {
         return materialRequirements;
     }
 
-    public Set<String> getCustomKeys() {
+    public String[] getCustomKeys() {
         return customKeys;
     }
 
@@ -76,26 +84,5 @@ public class TextGenerator implements IGenerator<TextGenerator>, ILoggable {
 
     public boolean isClient() {
         return isClient;
-    }
-
-    @Override
-    public void LogToStream(Writer writer, String prefix) throws IOException {
-        writer.append(prefix + "TextGenerator:\n");
-        writer.append(prefix + "├ Version: " + this.version + "\n");
-        writer.append(prefix + "├ Side: " + (this.isClient ? "Client" : "Server") + "\n");
-        if(this.customKeys.size() > 0){
-            writer.append(prefix + "├ Custom Keys: \n");
-            for(String key : this.customKeys)
-                writer.append(prefix + "│ ├ '" + key + "'\n");
-        }else{
-            writer.append(prefix + "├ Custom Keys: <NONE>\n");
-        }
-        if(this.tasks.size() > 0) {
-            writer.append(prefix + "└ Tasks:\n");
-            for(TextTask task : this.tasks)
-                task.LogToStream(writer, "  │ ");
-        }else{
-            writer.append(prefix + "└ Tasks: <NONE>\n");
-        }
     }
 }

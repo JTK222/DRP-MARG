@@ -1,0 +1,34 @@
+[
+  {
+    "materialType": "wood",
+    "requiredMod": "minecraft",
+    "name": "jungle",
+    "properties": {
+      "mapColor": "dirt",
+      "resistance": 3.0,
+      "hardness": 2.0,
+      "harvestLevel": 0,
+      "harvestTool": "axe"
+    },
+    "textures": {
+      "leaves": "minecraft:block/jungle_leaves",
+      "log": "minecraft:block/jungle_log",
+      "log_top": "minecraft:block/jungle_log_top",
+      "stripped_log": "minecraft:block/stripped_jungle_log",
+      "stripped_log_top": "minecraft:block/stripped_jungle_log_top",
+      "planks": "minecraft:block/jungle_planks"
+    },
+    "items": {
+      "log": "jungle_log",
+      "stripped_log": "stripped_jungle_log",
+      "planks": "jungle_planks",
+      "leaves": "jungle_leaves"
+    },
+    "blocks": {
+      "log": "jungle_log",
+      "stripped_log": "stripped_jungle_log",
+      "planks": "jungle_planks",
+      "leaves": "jungle_leaves"
+    }
+  }
+]

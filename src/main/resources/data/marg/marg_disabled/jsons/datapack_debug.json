@@ -1,0 +1,7 @@
+{
+	"parent": "drpmedieval:item/firewood",
+	"textures": {
+		"0": "${item%log}"
+	},
+	"custom": "${custom}"
+}

@@ -1,10 +1,10 @@
 modLoader="javafml" #mandatory
-loaderVersion="[28,)" #mandatory (24 is current forge version)
+loaderVersion="[28,)" #mandatory (24 is current forge generatorVersion)
 issueTrackerURL="http://my.issue.tracker/" #optional
 
 [[mods]]
 	modId="marg"
-	version="${version}"
+	generatorVersion="${version}"
 	displayName="Dark Roleplay MARG"
 	displayURL="https://dark-roleplay.net/"
 	#logoFile="examplemod.png" #optional
@@ -17,8 +17,17 @@ This is achieved by adding so called "Materials" for example all existing wood t
 Mods can then use this materials to automatically add correspsonding variants of their blocks and items.
 Additionally to this, they can also automatically generate assets, like textures and or models.
 '''
+[modproperties.marg]
+    margMaterialFiles=[
+        "data/marg/marg_materials/oak.json",
+        "data/marg/marg_materials/spruce.json",
+        "data/marg/marg_materials/birch.json",
+        "data/marg/marg_materials/jungle.json",
+        "data/marg/marg_materials/dark_oak.json",
+        "data/marg/marg_materials/acacia.json"
+    ]
 
-[[dependencies.drpmedieval]] #optional
+[[dependencies.marg]] #optional
     modId="forge" #mandatory
     mandatory=true #mandatory
     versionRange="[28,)" #mandatory

@@ -1,10 +1,11 @@
 package net.dark_roleplay.marg.impl.generators.textures;
 
-import net.dark_roleplay.marg.impl.generators.textures.util.TextureCache;
-import net.dark_roleplay.marg.impl.generators.textures.util.TexturePair;
-import net.dark_roleplay.marg.impl.generators.textures.util.Axis2D;
-import net.dark_roleplay.marg.impl.generators.textures.util.TextureEditors;
-import net.dark_roleplay.marg.impl.generators.textures.util.TextureManipulationType;
+import net.dark_roleplay.marg.util.texture.TextureCache;
+import net.dark_roleplay.marg.util.texture.TexturePair;
+import net.dark_roleplay.marg.util.texture.Axis2D;
+import net.dark_roleplay.marg.util.texture.TextureEditors;
+import net.dark_roleplay.marg.util.texture.TextureManipulationType;
+import net.dark_roleplay.marg.data.texture.TextureManipulationData;
 
 import java.awt.image.BufferedImage;
 
@@ -17,13 +18,13 @@ public final class TextureManipulation {
     private final Axis2D axis;
     private final int tint;
 
-    public TextureManipulation(String textureName, TextureManipulationType type, int textureID, int angle, int tint, Axis2D axis){
-        this.textureName = textureName;
-        this.type = type;
-        this.textureID = textureID;
-        this.angle = angle;
-        this.axis = axis;
-        this.tint = tint;
+    public TextureManipulation(TextureManipulationData data){
+        this.type = data.getType();
+        this.textureName = data.getTextureName();
+        this.textureID = data.getTextureID();
+        this.angle = data.getAngle();
+        this.axis = data.getAxis();
+        this.tint = data.getTintIndex();
     }
 
     public void apply(BufferedImage[] requiredResources, TextureCache localCache, TexturePair pair){
@@ -34,7 +35,7 @@ public final class TextureManipulation {
                 pair.setImage(TextureEditors.maskImage(pair.getImage(), !this.textureName.isEmpty() ? localCache.getCachedImage(pair.getMaterial().getTextProvider().apply(this.textureName)) : requiredResources[this.textureID]));
                 break;
             case OVERLAY:
-                pair.setImage(TextureEditors.overlayImage(pair.getImage(), !this.textureName.isEmpty() ? localCache.getCachedImage(pair.getMaterial().getTextProvider().apply(this.textureName)) : requiredResources[this.textureID]));
+                pair.setImage(TextureEditors.overlayImage(pair.getImage(), (this.textureName == null || this.textureName.isEmpty()) ? requiredResources[this.textureID] : localCache.getCachedImage(pair.getMaterial().getTextProvider().apply(this.textureName))));
                 break;
             case FLIP:
                 pair.setImage(TextureEditors.flipImage(pair.getImage(), this.axis == Axis2D.X));

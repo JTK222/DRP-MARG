@@ -1,42 +1,39 @@
 package net.dark_roleplay.marg.impl.generators.text;
 
-import net.dark_roleplay.marg.Marg;
 import net.dark_roleplay.marg.api.materials.IMaterial;
+import net.dark_roleplay.marg.data.text.TextTaskData;
 import net.dark_roleplay.marg.impl.materials.MargMaterial;
 import net.dark_roleplay.marg.util.FileHelper;
-import net.dark_roleplay.marg.util.ILoggable;
-import net.minecraft.client.Minecraft;
+import net.dark_roleplay.marg.util.FileUtil;
 import net.minecraft.resources.IResource;
+import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.*;
 import java.util.Set;
 
-public class TextTask implements ILoggable {
+public class TextTask{
 
     private final ResourceLocation input;
     private final String output;
-    private final String generatorLoc;
     private boolean hasErrored = false;
 
     private String inputString = "";
 
-    public TextTask(String generatorLoc, ResourceLocation input, String output) {
-        this.generatorLoc = generatorLoc;
-        this.input = input;
-        this.output = output;
+    public TextTask(TextTaskData data) {
+        this.input = new ResourceLocation(data.getInput());
+        this.output = data.getOutput();
     }
 
     public boolean needsToGenerate(MargMaterial mat, Set<String> customKeys) {
         return !FileHelper.doesFileExistClient(mat.getTextProvider().apply(output));
     }
 
-    public void prepareTask() {
+    public void prepareTask(IResourceManager resourceManager) {
         IResource inputRes = null;
         try {
-            inputRes = Minecraft.getInstance().getResourceManager().getResource(input);
+            inputRes = resourceManager.getResource(input);
         } catch (IOException e) {
-            Marg.LOGGER.error("Text Generator '{}' has an Invalid input '{}'", generatorLoc.toString(), input.toString());
             this.hasErrored = true;
         }
 
@@ -44,12 +41,11 @@ public class TextTask implements ILoggable {
             if(inputRes != null)
                 inputString = FileHelper.quickLoadString(inputRes.getInputStream());
         } catch (IOException e) {
-            Marg.LOGGER.error("An error occurred trying to read '{}' referenced by '{}'", input.toString(), generatorLoc.toString());
             this.hasErrored = true;
         }
     }
 
-    public void generate(Set<IMaterial> materials, Set<String> customKeys, boolean isClient) {
+    public void generate(Set<IMaterial> materials, String[] customKeys, boolean isClient) {
         if(this.hasErrored) return;
         if(materials == null && customKeys != null){
             for(String custom : customKeys){
@@ -72,12 +68,11 @@ public class TextTask implements ILoggable {
 
     private void writeToFile(boolean isClient, String path, String content){
         File outputFile = null;
-        outputFile = new File(isClient ? Marg.FOLDER_ASSETS : Marg.FOLDER_DATA, (isClient ? "assets/" : "data/") + path.replaceFirst(":", "/"));
+        outputFile = new File(isClient ? FileUtil.RESOURCE_PACK_FOLDER : FileUtil.DATA_PACK_FOLDER, (isClient ? "assets/" : "data/") + path.replaceFirst(":", "/"));
 
         try {
             FileHelper.writeFile(outputFile, content);
         } catch (IOException e) {
-            Marg.LOGGER.error("An error occurred trying to generate outputFile '{}' referenced in '{}'", outputFile.getPath(), generatorLoc);
             e.printStackTrace();
         }
     }
@@ -89,13 +84,5 @@ public class TextTask implements ILoggable {
 
     public String getOutput() {
         return output;
-    }
-
-    @Override
-    public void LogToStream(Writer writer, String prefix) throws IOException {
-        writer.append(prefix + "TextTask:\n");
-        writer.append(prefix + "├ Generator Loc: " + this.generatorLoc + "\n");
-        writer.append(prefix + "├ Input: " + this.input.toString() + "\n");
-        writer.append(prefix + "└ Output: " + this.output + "\n");
     }
 }
