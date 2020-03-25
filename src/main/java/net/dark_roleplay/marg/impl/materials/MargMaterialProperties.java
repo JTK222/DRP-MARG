@@ -2,68 +2,64 @@ package net.dark_roleplay.marg.impl.materials;
 
 import net.dark_roleplay.marg.api.materials.IMaterialProperties;
 import net.dark_roleplay.marg.util.MaterialColorHelper;
+import net.dark_roleplay.marg.data.material.MaterialPropertiesData;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraftforge.common.ToolType;
 
 public class MargMaterialProperties implements IMaterialProperties {
 
-    private final MaterialColor materialColor;
-    private final String materialColorName;
-    private final float resistance;
-    private final float hardness;
-    private final float slipperiness;
-    private final int lightValue;
-    private final int harvestLevel;
-    private final ToolType harvestTool;
+    private MaterialColor mapColor;
+    private ToolType harvestTool;
+    private float resistance;
+    private float hardness;
+    private float slipperiness = 0.6F;
+    private int lightValue;
+    private int harvestLevel;
 
-    public MargMaterialProperties(String materialColor, float resistance, float hardness, float slipperiness, int lightValue, int harvestLevel, String toolType){
-        this.materialColor = MaterialColorHelper.getColor(materialColor);
-        this.materialColorName = materialColor;
-        this.resistance = resistance;
-        this.hardness = hardness;
-        this.slipperiness = slipperiness;
-        this.lightValue = lightValue;
-        this.harvestLevel = harvestLevel;
-        this.harvestTool = toolType == null ? null : ToolType.get(toolType);
+    public MargMaterialProperties(MaterialPropertiesData data){
+        if(data.getMapColor() != null)
+            this.mapColor = MaterialColorHelper.getColor(data.getMapColor());
+        if(data.getHarvestTool() != null)
+            this.harvestTool = ToolType.get(data.getHarvestTool());
+        this.resistance = data.getResistance();
+        this.hardness = data.getHardness();
+        this.slipperiness = data.getSlipperiness();
+        this.lightValue = data.getLightValue();
+        this.harvestLevel = data.getHarvestLevel();
     }
 
     @Override
     public MaterialColor getMaterialColor() {
-        return materialColor;
-    }
-
-    @Override
-    public String getMaterialColorName() {
-        return materialColorName;
+        return mapColor;
     }
 
     @Override
     public float getResistance() {
-        return resistance;
+        return this.resistance;
     }
 
     @Override
     public float getHardness() {
-        return hardness;
+        return this.hardness;
     }
 
     @Override
     public float getSlipperiness() {
-        return slipperiness;
+        return this.slipperiness;
     }
 
     @Override
     public int getLightValue() {
-        return lightValue;
+        return this.lightValue;
     }
 
     @Override
     public int getHarvestLevel() {
-        return harvestLevel;
+        return this.harvestLevel;
     }
 
     @Override
-    public ToolType getHarvestTool() {
+    public ToolType getHarvestToolType() {
         return harvestTool;
     }
 }

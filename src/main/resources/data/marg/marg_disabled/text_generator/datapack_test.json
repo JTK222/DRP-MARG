@@ -1,0 +1,23 @@
+{
+	"generatorVersion": 0,
+	"material": {
+		"type": "wood",
+		"items": [
+			"log"
+		]
+	},
+	"customKeys": [
+		"potato",
+		"apple"
+	],
+	"tasks": [
+		{
+			"input": "marg:marg/jsons/datapack_debug.json",
+			"output": "marg:models/${material}_${custom}_test.json"
+		},
+		{
+			"input": "marg:marg/jsons/datapack_debug.json",
+			"output": "marg:models/${material}_test2.json"
+		}
+	]
+}

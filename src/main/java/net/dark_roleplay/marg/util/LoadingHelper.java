@@ -12,7 +12,7 @@ import com.google.gson.GsonBuilder;
 
 import com.google.gson.stream.JsonReader;
 import net.dark_roleplay.marg.impl.generators.IGenerator;
-import net.minecraft.client.Minecraft;
+import net.dark_roleplay.marg.impl.generators.lang.LanguageGenerator;
 import net.minecraft.resources.IResource;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
@@ -25,17 +25,34 @@ public class LoadingHelper {
 		return manager.getAllResourceLocations(path, fileName -> fileName.endsWith(".json")).stream().map(location ->
 				CompletableFuture.<T>supplyAsync(() -> {
 					try {
-						IResource resource = Minecraft.getInstance().getResourceManager().getResource(location);
+						IResource resource = manager.getResource(location);
 						try (JsonReader reader = new JsonReader(new BufferedReader(new InputStreamReader(resource.getInputStream())))) {
 							return generatorGen.apply(location, reader);
 						}
 					} catch (IOException e) {
 						e.printStackTrace();
 					} catch (IllegalStateException e){
-						LogHelper.error(String.format("There was an error trying to load %s", location), e);
+						e.printStackTrace();
 					}
 					return null;
 				}, backgroundExecutor)
 		).toArray(size -> new CompletableFuture[size]);
 	}
+
+//	public static void loadLangGenerators(IResourceManager manager, Executor backgroundExecutor, String path, BiFunction<ResourceLocation, JsonReader, LanguageGenerator> generatorGen){
+//		manager.getAllResourceLocations(path, fileName -> fileName.endsWith(".json")).stream().map(location -> {
+//					try {
+//						IResource resource = manager.getResource(location);
+//						try (JsonReader reader = new JsonReader(new BufferedReader(new InputStreamReader(resource.getInputStream())))) {
+//							return generatorGen.apply(location, reader);
+//						}
+//					} catch (IOException e) {
+//						e.printStackTrace();
+//					} catch (IllegalStateException e) {
+//						e.printStackTrace();
+//					}
+//					return null;
+//				}
+//		).reduce((languageGenerator, languageGenerator2) ->
+//	}
 }

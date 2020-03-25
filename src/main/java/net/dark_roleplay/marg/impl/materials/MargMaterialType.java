@@ -1,6 +1,5 @@
 package net.dark_roleplay.marg.impl.materials;
 
-import net.dark_roleplay.marg.api.MaterialTypes;
 import net.dark_roleplay.marg.api.materials.IMaterial;
 import net.dark_roleplay.marg.api.materials.IMaterialType;
 
@@ -13,22 +12,17 @@ public class MargMaterialType implements IMaterialType {
 
     public MargMaterialType(String name){
         this.name = name;
-        MaterialTypes.registerType(name, this);
     }
 
-    @Override
     public Set<IMaterial> getMaterials(){
         return this.materials;
     }
 
-    @Override
     public void addMaterial(IMaterial material){
         this.materials.add(material);
     }
 
-    @Override
     public String getTypeName(){
         return this.name;
     }
-
 }

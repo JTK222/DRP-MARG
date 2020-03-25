@@ -1,12 +1,11 @@
 package net.dark_roleplay.marg.impl.generators.textures;
 
-import net.dark_roleplay.marg.api.MaterialTypes;
 import net.dark_roleplay.marg.api.materials.IMaterial;
 import net.dark_roleplay.marg.api.materials.IMaterialCondition;
-import net.dark_roleplay.marg.impl.generators.textures.util.TextureCache;
+import net.dark_roleplay.marg.util.texture.TextureCache;
 import net.dark_roleplay.marg.impl.generators.IGenerator;
-import net.dark_roleplay.marg.util.ILoggable;
-import net.dark_roleplay.marg.util.LogHelper;
+import net.dark_roleplay.marg.data.texture.TextureGeneratorData;
+import net.dark_roleplay.marg.impl.materials.MargMaterialCondition;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 
@@ -15,11 +14,10 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Writer;
 import java.util.Arrays;
 import java.util.Set;
 
-public class TextureGenerator implements IGenerator<TextureGenerator>, ILoggable {
+public class TextureGenerator implements IGenerator<TextureGenerator> {
 
     public static final TextureCache globalCache = new TextureCache();
 
@@ -31,9 +29,21 @@ public class TextureGenerator implements IGenerator<TextureGenerator>, ILoggable
     private ResourceLocation[] requiredTextureLocs;
     private BufferedImage[] requiredTextures;
     private TextureTask[]  tasks;
-    private ResourceLocation generatorLocation;
 
     private boolean wasSuccessfull = true;
+
+    public TextureGenerator(TextureGeneratorData data){
+        this.materialRequirements = new MargMaterialCondition(data.getMaterial());
+        this.version = data.getGeneratorVersion();
+        this.requiredTextureLocs = new ResourceLocation[data.getRequiredTextures().length];
+        for(int i = 0; i < this.requiredTextureLocs.length; i++){
+            this.requiredTextureLocs[i] = new ResourceLocation(data.getRequiredTextures()[i]);
+        }
+        this.tasks = new TextureTask[data.getTasks().length];
+        for(int i = 0; i < this.tasks.length; i++){
+            this.tasks[i] = new TextureTask(data.getTasks()[i]);
+        }
+    }
 
     @Override
     public int getVersion() { return this.version; }
@@ -48,7 +58,6 @@ public class TextureGenerator implements IGenerator<TextureGenerator>, ILoggable
             try {
                 return Minecraft.getInstance().getResourceManager().getResource(loc);
             } catch (IOException e) {
-                LogHelper.error(String.format("There was an error trying to load the required texture '%s' for '%s'", loc.toString(), this.generatorLocation),e);
                 e.printStackTrace();
                 return null;
             }
@@ -57,7 +66,6 @@ public class TextureGenerator implements IGenerator<TextureGenerator>, ILoggable
             try (InputStream input = new BufferedInputStream(resource.getInputStream())){
                 return ImageIO.read(input);
             } catch (IOException e) {
-                LogHelper.error(String.format("There was an error trying to load the required texture '%s' for '%s'", resource.getLocation().toString(), this.generatorLocation),e);
                 e.printStackTrace();
                 return null; //TODO Replace null with error texture
             }
@@ -73,10 +81,5 @@ public class TextureGenerator implements IGenerator<TextureGenerator>, ILoggable
         Set<IMaterial> materials = materialRequirements.getMaterials();
         for(TextureTask task : this.tasks)task.generate(this.requiredTextures, this.localCache, globalCache, materials);
         this.localCache.clear();
-    }
-
-    @Override
-    public void LogToStream(Writer writer, String prefix) throws IOException {
-
     }
 }
