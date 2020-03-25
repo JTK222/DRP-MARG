@@ -3,17 +3,26 @@ buildscript {
         maven { url = 'https://files.minecraftforge.net/maven' }
         jcenter()
         mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath "com.wynprice.cursemaven:CurseMaven:1.2.3"
     }
 }
-apply plugin: 'net.minecraftforge.gradle'
-// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-apply plugin: 'idea'
-apply plugin: 'maven-publish'
+plugins {
+    id 'com.matthewprenger.cursegradle' version '1.4.0'
+    id 'idea'
+    id 'maven-publish'
+}
 
-version = '1.14.4-0.4.3'
+//The Plugin block only works for plugins in the gradle maven
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'com.wynprice.cursemaven'
+
+def MOD_VERSION = '0.5.0';
+
+version = "${MC_VERSION}-${MOD_VERSION}"
 group = 'net.dark_roleplay'
 archivesBaseName = 'marg'
 
@@ -24,24 +33,16 @@ configurations {
 }
 
 sourceSets {
-    generated
     api
+    main.resources.srcDirs += 'src/generated/resources'
     main {
         compileClasspath += sourceSets.api.output
         runtimeClasspath += sourceSets.api.output
-        compileClasspath += sourceSets.generated.output
-        runtimeClasspath += sourceSets.generated.output
-    }
-    test {
-        compileClasspath += sourceSets.api.output
-        runtimeClasspath += sourceSets.api.output
-        compileClasspath += sourceSets.generated.output
-        runtimeClasspath += sourceSets.generated.output
     }
 }
 
 minecraft {
-    mappings channel: 'snapshot', version: '20190906-1.14.3'
+    mappings channel: 'snapshot', version: '20200325-1.15.1'
     runs {
         client {
             workingDirectory project.file('runs/client')
@@ -51,8 +52,7 @@ minecraft {
                     "archivesBaseName%%${project.file('out/production/resources').canonicalPath};" +
                     "archivesBaseName%%${project.file('out/production/classes').canonicalPath};" +
                     "archivesBaseName%%${project.file('out/api/resources').canonicalPath};"+
-                    "archivesBaseName%%${project.file('out/api/classes').canonicalPath};"+
-                    "archivesBaseName%%${project.file('out/generated/resources').canonicalPath}"
+                    "archivesBaseName%%${project.file('out/api/classes').canonicalPath}"
         }
 
         server {
@@ -63,23 +63,15 @@ minecraft {
                     "archivesBaseName%%${project.file('out/production/resources').canonicalPath};" +
                             "archivesBaseName%%${project.file('out/production/classes').canonicalPath};" +
                             "archivesBaseName%%${project.file('out/api/resources').canonicalPath};"+
-                            "archivesBaseName%%${project.file('out/api/classes').canonicalPath};"+
-                            "archivesBaseName%%${project.file('out/generated/resources').canonicalPath}"
-        }
-
-        data {
-            workingDirectory project.file('runs/data_gen')
-            args '--mod', 'drpmedieval', '--all', '--output', file('src/generated/resources/')
-
-
-            environment 'MOD_CLASSES',
-                    "archivesBaseName%%${project.file('out/production/resources').canonicalPath};" +
-                            "archivesBaseName%%${project.file('out/production/classes').canonicalPath};" +
-                            "archivesBaseName%%${project.file('out/api/resources').canonicalPath};"+
-                            "archivesBaseName%%${project.file('out/api/classes').canonicalPath};"+
-                            "archivesBaseName%%${project.file('out/generated/resources').canonicalPath}"
+                            "archivesBaseName%%${project.file('out/api/classes').canonicalPath}"
         }
     }
+}
+
+repositories {
+    maven {url = "https://maven.dark-roleplay.net/"}
+    maven {url = "https://minecraft.curseforge.com/api/maven/"}
+    mavenLocal()
 }
 
 dependencies {
@@ -96,14 +88,12 @@ jar {
     from sourceSets.main.output.resourcesDir
     from sourceSets.api.output.resourcesDir
     from sourceSets.api.output.classesDirs
-    from sourceSets.generated.output.classesDirs
-    from sourceSets.generated.output.resourcesDir
 
     manifest {
         attributes([
             "Specification-Title": "marg",
             "Specification-Vendor": "Dark Roleplay",
-            "Specification-Version": "0.1",
+            "Specification-Version": "0.4",
             "Implementation-Title": "Materials and Automatic Resource Generation",
             "Implementation-Version": "${version}",
             "Implementation-Vendor" :"Dark Roleplay",
@@ -121,7 +111,6 @@ task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
     from sourceSets.main.allSource
     from sourceSets.api.allSource
-    from sourceSets.generated.allSource
 }
 
 task apiJar(type: Jar) {
@@ -153,6 +142,18 @@ idea {
         for (String excludeDirName in ["run", "out", "runs", ".github", ".idea", "gradle"]) {
             File excludeDir = new File(projectDir, excludeDirName)
             excludeDirs.add(excludeDir)
+        }
+    }
+}
+
+curseforge {
+    apiKey = System.getenv('CURSE_API_KEY') // This should really be in a gradle.properties file
+    project {
+        id = '324494'
+        changelog = file('changelog.txt') // A file can also be set using: changelog = file('changelog.txt')
+        releaseType = 'release'
+        mainArtifact(jar) {
+            displayName = "MARG - ${MC_VERSION} - v${MOD_VERSION} Alpha"
         }
     }
 }
