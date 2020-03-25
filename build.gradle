@@ -13,7 +13,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'idea'
 apply plugin: 'maven-publish'
 
-version = '1.14.4-0.4'
+version = '1.14.4-0.4.3'
 group = 'net.dark_roleplay'
 archivesBaseName = 'marg'
 
@@ -23,8 +23,6 @@ configurations {
     apiCompile.extendsFrom(compile)
 }
 
-//apply from: 'https://dark-roleplay.net/files/gradle_helpers/1.14.4/general.php'
-//EXCLUDE ME
 sourceSets {
     generated
     api

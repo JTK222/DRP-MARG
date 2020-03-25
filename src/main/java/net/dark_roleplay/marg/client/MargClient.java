@@ -2,6 +2,7 @@ package net.dark_roleplay.marg.client;
 
 import net.dark_roleplay.marg.impl.generators.IGenerator;
 import net.dark_roleplay.marg.data.text.TextGeneratorData;
+import net.dark_roleplay.marg.impl.generators.lang.LanguageGenerator;
 import net.dark_roleplay.marg.impl.generators.text.TextGenerator;
 import net.dark_roleplay.marg.impl.generators.textures.TextureGenerator;
 import net.dark_roleplay.marg.util.LoadingHelper;
@@ -24,6 +25,19 @@ public class MargClient {
 		Minecraft.getInstance().getResourcePackList().addPackFinder(new MargResourcePackFinder(FileUtil.RESOURCE_PACK_FOLDER));
 
 		if (Minecraft.getInstance().getResourceManager() instanceof IReloadableResourceManager) {
+//			((IReloadableResourceManager) Minecraft.getInstance().getResourceManager()).addReloadListener(
+//					(stage, resourceManager, preparationsProfiler, reloadProfiler, backgroundExecutor, gameExecutor) -> {
+//						CompletableFuture<LanguageGenerator>[] generators = LoadingHelper.loadGenerators(resourceManager, backgroundExecutor, path, (loc, reader) -> generatorConst.apply(MargGson.NEW_GSON.fromJson(reader, dataClass)));
+//						for (CompletableFuture<LanguageGenerator> generator : generators)
+//							generator
+//									.thenApplyAsync(gen -> gen.prepareGenerator())
+//									.thenApplyAsync(gen -> gen.generate())
+//									.thenAcceptAsync(loader -> loader.generate(), backgroundExecutor);
+//
+//						CompletableFuture allGenerators = CompletableFuture.allOf(generators);
+//					}
+//			)};
+
 			((IReloadableResourceManager) Minecraft.getInstance().getResourceManager()).addReloadListener(
 					(stage, resourceManager, preparationsProfiler, reloadProfiler, backgroundExecutor, gameExecutor) ->
 							createGeneratorReloadListener(stage, resourceManager, backgroundExecutor, "marg/texture_generator", TextureGeneratorData.class, TextureGenerator::new));

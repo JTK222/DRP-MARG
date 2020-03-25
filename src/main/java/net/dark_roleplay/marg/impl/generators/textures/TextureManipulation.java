@@ -32,7 +32,7 @@ public final class TextureManipulation {
             case NONE:
                 return;
             case MASK:
-                pair.setImage(TextureEditors.maskImage(pair.getImage(), !this.textureName.isEmpty() ? localCache.getCachedImage(pair.getMaterial().getTextProvider().apply(this.textureName)) : requiredResources[this.textureID]));
+                pair.setImage(TextureEditors.maskImage(pair.getImage(), (this.textureName == null || this.textureName.isEmpty()) ? requiredResources[this.textureID] : localCache.getCachedImage(pair.getMaterial().getTextProvider().apply(this.textureName))));
                 break;
             case OVERLAY:
                 pair.setImage(TextureEditors.overlayImage(pair.getImage(), (this.textureName == null || this.textureName.isEmpty()) ? requiredResources[this.textureID] : localCache.getCachedImage(pair.getMaterial().getTextProvider().apply(this.textureName))));

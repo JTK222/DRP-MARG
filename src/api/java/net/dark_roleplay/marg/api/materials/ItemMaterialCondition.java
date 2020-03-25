@@ -2,19 +2,20 @@ package net.dark_roleplay.marg.api.materials;
 
 import net.dark_roleplay.marg.api.MargAPI;
 import net.dark_roleplay.marg.api.provider.IGraphicsProvider;
+import net.dark_roleplay.marg.api.provider.ITextProvider;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class BaseMaterialCondition implements IMaterialCondition {
+public class ItemMaterialCondition implements IMaterialCondition {
 
 	private final String type;
-	private final String[] requiredTextures;
+	private final String[] items;
 	private Set<IMaterial> gatheredMaterials;
 
-	public BaseMaterialCondition(String type, String[] requiredTextures) {
-		this.requiredTextures = requiredTextures;
+	public ItemMaterialCondition(String type, String... items) {
+		this.items = items;
 		this.type = type;
 	}
 
@@ -34,10 +35,11 @@ public class BaseMaterialCondition implements IMaterialCondition {
 
 	@Override
 	public boolean doesAccept(IMaterial material) {
-		if(requiredTextures != null && requiredTextures.length > 0) {
-			IGraphicsProvider gfxProvider = material.getGraphicsProvider();
-			for (String texture : requiredTextures)
-				if (!gfxProvider.hasTexture(texture)) return false;
+		if(!this.type.equals(material.getMaterialTypeName())) return false;
+		ITextProvider txtProvider = material.getTextProvider();
+		if(items != null && items.length > 0){
+			for (String item : items)
+				if(!txtProvider.hasKey("item%" + item)) return false;
 		}
 		return true;
 	}

@@ -1,62 +1,45 @@
 package net.dark_roleplay.marg.impl.generators.lang;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import net.dark_roleplay.marg.impl.materials.MargMaterial;
+import net.dark_roleplay.marg.api.materials.IMaterial;
+import net.dark_roleplay.marg.api.materials.IMaterialCondition;
+import net.dark_roleplay.marg.data.lang.LangGeneratorData;
+import net.dark_roleplay.marg.impl.generators.IGenerator;
+import net.dark_roleplay.marg.impl.materials.MargMaterialCondition;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
-public class LanguageGenerator {
+public class LanguageGenerator implements IGenerator<LanguageGenerator> {
 
-	protected static Map<String, String>	languageFiles	= new HashMap<String, String>();
+	protected static Map<String, String> langEntries	= new HashMap<String, String>();
 
-	private JsonArray						translations;
+	private int version = 0;
+	private IMaterialCondition materialRequirements;
 
-	private String							type			= "none";
-	private ResourceLocation				file			= null;
-
-	public LanguageGenerator(ResourceLocation file, JsonElement elm) {
-		this.file = file;
-		if(elm.isJsonObject()) {
-			JsonObject obj = elm.getAsJsonObject();
-
-			if(obj.has("type")) {
-				this.type = obj.get("type").getAsString();
-			}
-
-			if(obj.has("translations")) {
-				this.translations = obj.get("translations").getAsJsonArray();
-			}
-		}
+	public LanguageGenerator(LangGeneratorData data) {
+		this.version = data.getGeneratorVersion();
+		this.materialRequirements = new MargMaterialCondition(data.getMaterial());
+		this.langEntries = data.getLangEntries();
 	}
 
-	public String getType() { return this.type; }
-
-	public static Map<String, String> getLanguageFiles() { return languageFiles; }
-
-	public static void clearLanguageFiles() {
-		languageFiles = new HashMap<String, String>();
+	@Override
+	public int getVersion() {
+		return this.version;
 	}
 
-	public void generateLanguages(Set<MargMaterial> materials) {
-		String langName = Minecraft.getInstance().gameSettings.language.toLowerCase();
+	@Override
+	public boolean needsToGenerate(IMaterial material) {
+		return true;
+	}
 
-		for(int i = 0; i < this.translations.size(); i++ ) {
-			JsonObject	obj			= this.translations.get(i).getAsJsonObject();
+	@Override
+	public LanguageGenerator prepareGenerator() {
+		return this;
+	}
 
-			String		outputKey	= obj.get("outputKey").getAsString();
-			String		inputKey	= obj.get("inputKey").getAsString();
-
-			String		file		= languageFiles.containsKey(langName) ? languageFiles.get(langName) : "";
-			for(MargMaterial mat : materials) {
-				//file += outputKey.replace("%wood%", mat.getName()) + "=" + I18n.format(inputKey, mat.getTranslation()) + "\n";
-			}
-			languageFiles.put(langName, file);
-		}
+	@Override
+	public void generate() {
+		String lang = Minecraft.getInstance().getLanguageManager().getCurrentLanguage().getName();
 	}
 }
