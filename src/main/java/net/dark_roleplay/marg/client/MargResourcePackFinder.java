@@ -2,11 +2,14 @@ package net.dark_roleplay.marg.client;
 
 import java.io.File;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import net.minecraft.resources.FolderPack;
 import net.minecraft.resources.IPackFinder;
+import net.minecraft.resources.IPackNameDecorator;
 import net.minecraft.resources.ResourcePackInfo;
 import net.minecraft.resources.ResourcePackInfo.IFactory;
+import net.minecraft.resources.data.PackMetadataSection;
 
 public class MargResourcePackFinder implements IPackFinder {
 
@@ -17,11 +20,10 @@ public class MargResourcePackFinder implements IPackFinder {
 	}
 
 	@Override
-	public <T extends ResourcePackInfo> void addPackInfosToMap(Map<String, T> nameToPackMap, IFactory<T> packInfoFactory) {
+	public <T extends ResourcePackInfo> void func_230230_a_(Consumer<T> consumer, IFactory<T> factory) {
 		if(folder.exists() && folder.isDirectory()) {
-			T t = ResourcePackInfo.createResourcePack("Marg Generated Assets/Data", true, () -> new FolderPack(folder), packInfoFactory, ResourcePackInfo.Priority.TOP);
-			if (t == null) return;
-			nameToPackMap.put("marg:generated", t);
+			T info = ResourcePackInfo.createResourcePack("generated/MARG", true, () -> new FolderPack(folder), factory, ResourcePackInfo.Priority.TOP, IPackNameDecorator.field_232626_b_);
+			consumer.accept(info);
 		}
 	}
 }

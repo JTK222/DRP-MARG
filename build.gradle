@@ -20,7 +20,7 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'com.wynprice.cursemaven'
 
-def MOD_VERSION = '0.5.0';
+def MOD_VERSION = '0.5.1';
 
 version = "${MC_VERSION}-${MOD_VERSION}"
 group = 'net.dark_roleplay'
@@ -34,7 +34,6 @@ configurations {
 
 sourceSets {
     api
-    main.resources.srcDirs += 'src/generated/resources'
     main {
         compileClasspath += sourceSets.api.output
         runtimeClasspath += sourceSets.api.output
@@ -42,7 +41,7 @@ sourceSets {
 }
 
 minecraft {
-    mappings channel: 'snapshot', version: '20200325-1.15.1'
+    mappings channel: 'snapshot', version: "${MAPPINGS_VERSION}"
     runs {
         client {
             workingDirectory project.file('runs/client')
@@ -124,6 +123,8 @@ artifacts {
     archives javadocJar
 }
 
+import groovy.json.JsonSlurper
+import groovy.json.JsonOutput
 
 processResources {
     from(sourceSets.main.resources.srcDirs) {
@@ -134,6 +135,13 @@ processResources {
 
     from(sourceSets.main.resources.srcDirs) {
         exclude 'META-INF/mods.toml'
+    }
+
+    // Minify json resources
+    doLast {
+        fileTree(dir: outputs.files.asPath, include: "**/*.json").each {
+            File file -> file.text = JsonOutput.toJson(new JsonSlurper().parse(file))
+        }
     }
 }
 

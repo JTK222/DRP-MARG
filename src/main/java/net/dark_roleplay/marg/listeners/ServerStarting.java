@@ -8,6 +8,7 @@ import net.dark_roleplay.marg.impl.generators.text.TextGenerator;
 import net.dark_roleplay.marg.util.FileUtil;
 import net.dark_roleplay.marg.util.MargGson;
 import net.minecraft.resources.IFutureReloadListener;
+import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.resources.ResourcePackList;
 import net.minecraft.server.MinecraftServer;
@@ -29,9 +30,14 @@ public class ServerStarting {
 	public static void serverStarting(FMLServerAboutToStartEvent event) {
 		((ResourcePackList<?>) ObfuscationReflectionHelper.getPrivateValue(MinecraftServer.class, event.getServer(), "field_195577_ad")).addPackFinder(new MargResourcePackFinder(FileUtil.DATA_PACK_FOLDER));
 
-		event.getServer().getResourceManager().addReloadListener(
-				(stage, resourceManager, preparationsProfiler, reloadProfiler, backgroundExecutor, gameExecutor) ->
-						createGeneratorReloadListener(stage, resourceManager, backgroundExecutor, "marg/text_generator", TextGeneratorData.class, data -> new TextGenerator(data, resourceManager,false)));
+		IResourceManager listener = event.getServer().getDataPackRegistries().func_240970_h_();
+		if(listener instanceof IReloadableResourceManager){
+			IReloadableResourceManager reloadListener = (IReloadableResourceManager) listener;
+			reloadListener.addReloadListener(
+					(stage, resourceManager, preparationsProfiler, reloadProfiler, backgroundExecutor, gameExecutor) ->
+							createGeneratorReloadListener(stage, resourceManager, backgroundExecutor, "marg/text_generator", TextGeneratorData.class, data -> new TextGenerator(data, resourceManager,false)));
+
+		}
 
 	}
 	private static <A, B extends IGenerator> CompletableFuture<Void> createGeneratorReloadListener(IFutureReloadListener.IStage stage, IResourceManager resourceManager, Executor backgroundExecutor, String path, Class<A> dataClass, Function<A, B> generatorConst) {
@@ -43,5 +49,10 @@ public class ServerStarting {
 
 		CompletableFuture allGenerators = CompletableFuture.allOf(generators);
 		return allGenerators.thenCompose(stage::markCompleteAwaitingOthers);
+	}
+
+	@SubscribeEvent
+	public static void dataPackRegister(){
+
 	}
 }
