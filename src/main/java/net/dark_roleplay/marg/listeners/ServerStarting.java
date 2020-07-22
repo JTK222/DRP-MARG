@@ -50,9 +50,4 @@ public class ServerStarting {
 		CompletableFuture allGenerators = CompletableFuture.allOf(generators);
 		return allGenerators.thenCompose(stage::markCompleteAwaitingOthers);
 	}
-
-	@SubscribeEvent
-	public static void dataPackRegister(){
-
-	}
 }

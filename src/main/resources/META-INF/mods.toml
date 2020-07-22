@@ -17,7 +17,8 @@ This is achieved by adding so called "Materials" for example all existing wood t
 Mods can then use this materials to automatically add correspsonding variants of their blocks and items.
 Additionally to this, they can also automatically generate assets, like textures and or models.
 '''
-[modproperties.marg]
+
+[properties.marg]
     margMaterialFiles=[
         "data/marg/marg_materials/oak.json",
         "data/marg/marg_materials/spruce.json",
@@ -30,6 +31,6 @@ Additionally to this, they can also automatically generate assets, like textures
 [[dependencies.marg]] #optional
     modId="forge" #mandatory
     mandatory=true #mandatory
-    versionRange="[28,)" #mandatory
+    versionRange="[32,)" #mandatory
     ordering="NONE"
     side="BOTH"
