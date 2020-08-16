@@ -1,0 +1,31 @@
+[
+  {
+    "materialType": "wood",
+    "requiredMod": "minecraft",
+    "name": "warped",
+    "properties": {
+      "mapColor": "adobe",
+      "resistance": 3.0,
+      "hardness": 2.0,
+      "harvestLevel": 0,
+      "harvestTool": "axe"
+    },
+    "textures": {
+      "log": "marg:block/warped_stem",
+      "log_top": "minecraft:block/warped_stem_top",
+      "stripped_log": "minecraft:block/stripped_warped_stem",
+      "stripped_log_top": "minecraft:block/stripped_warped_stem_top",
+      "planks": "minecraft:block/warped_planks"
+    },
+    "items": {
+      "log": "warped_stem",
+      "stripped_log": "stripped_warped_stem",
+      "planks": "warped_planks"
+    },
+    "blocks": {
+      "log": "warped_stem",
+      "stripped_log": "stripped_warped_stem",
+      "planks": "warped_planks"
+    }
+  }
+]

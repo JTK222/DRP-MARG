@@ -14,29 +14,38 @@ import java.util.Map;
 
 public class MaterialLoader {
 
-    public static void loadMaterialFiles() {
-        ModList.get().getMods().forEach(info -> {
-            Map<String, Object> props = info.getModProperties();
+	public static void loadMaterialFiles() {
+		//ModList.get().getModFiles()
+		ModList.get().getModFiles().forEach(info -> {
+			Map<String, Object> props = info.getFileProperties();
 
-            if(props.containsKey("margMaterialFiles") && props.get("margMaterialFiles") instanceof List){
-                List files = (List) props.get("margMaterialFiles");
+			//if(props.containsKey("margMaterialFiles") && props.get("margMaterialFiles") instanceof List){
+			//List files = (List) props.get("margMaterialFiles");
 
-                for(int i = 0; i < files.size(); i++){
-                    String file = files.get(i).toString();
+			String files[] = new String[]{"data/marg/marg_materials/oak.json",
+					"data/marg/marg_materials/spruce.json",
+					"data/marg/marg_materials/birch.json",
+					"data/marg/marg_materials/jungle.json",
+					"data/marg/marg_materials/dark_oak.json",
+					"data/marg/marg_materials/acacia.json",
+					"data/marg/marg_materials/crimson.json",
+					"data/marg/marg_materials/warped.json"};
+			for (int i = 0; i < files.length; i++) {
+				String file = files[i];
 
-                    try(JsonReader reader = new JsonReader(new InputStreamReader(Marg.class.getClassLoader().getResourceAsStream(file)))){
-                        MaterialData[] materials = MargGson.NEW_GSON.fromJson(reader, MaterialData[].class);
-                        for(MaterialData material : materials){
-                            if(ModList.get().isLoaded(material.getRequiredMod()))
-                                MargAPI.getMaterials().registerMaterial(new MargMaterial(material));
-                        }
-                    }catch(IOException e){
+				try (JsonReader reader = new JsonReader(new InputStreamReader(Marg.class.getClassLoader().getResourceAsStream(file)))) {
+					MaterialData[] materials = MargGson.NEW_GSON.fromJson(reader, MaterialData[].class);
+					for (MaterialData material : materials) {
+						if (ModList.get().isLoaded(material.getRequiredMod()))
+							MargAPI.getMaterials().registerMaterial(new MargMaterial(material));
+					}
+				} catch (IOException e) {
 
-                    }
-                }
-            }
-        });
-    }
+				}
+			}
+			//}
+		});
+	}
 
 
 }

@@ -18,7 +18,7 @@ Mods can then use this materials to automatically add correspsonding variants of
 Additionally to this, they can also automatically generate assets, like textures and or models.
 '''
 
-[properties.marg]
+[modproperties2.marg]
     margMaterialFiles=[
         "data/marg/marg_materials/oak.json",
         "data/marg/marg_materials/spruce.json",
