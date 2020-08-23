@@ -20,9 +20,9 @@ public class MargResourcePackFinder implements IPackFinder {
 	}
 
 	@Override
-	public <T extends ResourcePackInfo> void func_230230_a_(Consumer<T> consumer, IFactory<T> factory) {
+	public void func_230230_a_(Consumer<ResourcePackInfo> consumer, IFactory iFactory) {
 		if(folder.exists() && folder.isDirectory()) {
-			T info = ResourcePackInfo.createResourcePack("generated/MARG", true, () -> new FolderPack(folder), factory, ResourcePackInfo.Priority.TOP, IPackNameDecorator.field_232626_b_);
+			ResourcePackInfo info = ResourcePackInfo.createResourcePack("generated/MARG", true, () -> new FolderPack(folder), iFactory, ResourcePackInfo.Priority.TOP, IPackNameDecorator.BUILTIN);
 			consumer.accept(info);
 		}
 	}

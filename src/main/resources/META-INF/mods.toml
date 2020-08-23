@@ -1,6 +1,7 @@
 modLoader="javafml" #mandatory
 loaderVersion="[28,)" #mandatory (24 is current forge generatorVersion)
 issueTrackerURL="http://my.issue.tracker/" #optional
+license="ARR"
 
 [[mods]]
 	modId="marg"
@@ -18,14 +19,16 @@ Mods can then use this materials to automatically add correspsonding variants of
 Additionally to this, they can also automatically generate assets, like textures and or models.
 '''
 
-[modproperties2.marg]
+[modproperties.marg]
     margMaterialFiles=[
         "data/marg/marg_materials/oak.json",
         "data/marg/marg_materials/spruce.json",
         "data/marg/marg_materials/birch.json",
         "data/marg/marg_materials/jungle.json",
         "data/marg/marg_materials/dark_oak.json",
-        "data/marg/marg_materials/acacia.json"
+        "data/marg/marg_materials/acacia.json",
+        "data/marg/marg_materials/crimson.json",
+        "data/marg/marg_materials/warped.json"
     ]
 
 [[dependencies.marg]] #optional
