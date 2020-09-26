@@ -8,6 +8,7 @@ import net.dark_roleplay.marg.api.provider.ITextProvider;
 import net.dark_roleplay.marg.data.MaterialRequirementData;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -61,8 +62,7 @@ public class MargMaterialCondition implements IMaterialCondition {
     }
 
     @Override
-    public void forEach(Consumer<IMaterial> consumer) {
-        if(gatheredMaterials == null) getMaterials();
-        gatheredMaterials.stream().forEach(consumer);
+    public Iterator<IMaterial> iterator() {
+        return getMaterials().iterator();
     }
 }

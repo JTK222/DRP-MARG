@@ -1,7 +1,10 @@
 package net.dark_roleplay.marg.impl.generators.textures;
 
+import net.dark_roleplay.marg.api.textures.helper.TextureData;
+import net.dark_roleplay.marg.io.TextureDataIO;
 import net.dark_roleplay.marg.api.materials.IMaterial;
 import net.dark_roleplay.marg.api.materials.IMaterialCondition;
+import net.dark_roleplay.marg.api.textures.helper.TextureHolder;
 import net.dark_roleplay.marg.util.texture.TextureCache;
 import net.dark_roleplay.marg.impl.generators.IGenerator;
 import net.dark_roleplay.marg.data.texture.TextureGeneratorData;
@@ -10,7 +13,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 
 import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,7 +29,7 @@ public class TextureGenerator implements IGenerator<TextureGenerator> {
     private  TextureCache localCache;
 
     private ResourceLocation[] requiredTextureLocs;
-    private BufferedImage[] requiredTextures;
+    private TextureHolder[] requiredTextures;
     private TextureTask[]  tasks;
 
     private boolean wasSuccessfull = true;
@@ -63,13 +65,10 @@ public class TextureGenerator implements IGenerator<TextureGenerator> {
             }
         }).map(resource -> {
             if(resource == null) return null; //TODO Replace null with error texture
-            try (InputStream input = new BufferedInputStream(resource.getInputStream())){
-                return ImageIO.read(input);
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null; //TODO Replace null with error texture
-            }
-        }).toArray(size -> new BufferedImage[size]);
+            TextureData data = TextureDataIO.loadDataFromResources(resource);
+            if(data == null) return null;
+            else return new TextureHolder(data);
+        }).toArray(size -> new TextureHolder[size]);
 
         this.localCache = new TextureCache(globalCache);
         return this;

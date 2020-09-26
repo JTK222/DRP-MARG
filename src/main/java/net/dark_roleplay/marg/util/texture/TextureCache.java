@@ -1,6 +1,7 @@
 package net.dark_roleplay.marg.util.texture;
 
-import java.awt.image.BufferedImage;
+import net.dark_roleplay.marg.api.textures.helper.TextureHolder;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,7 +9,7 @@ public class TextureCache {
 
     private TextureCache parentCache = null;
 
-    private Map<String, BufferedImage> imageCache = new HashMap<String, BufferedImage>();
+    private Map<String, TextureHolder> imageCache = new HashMap<String, TextureHolder>();
 
     public TextureCache(){}
 
@@ -16,14 +17,14 @@ public class TextureCache {
         this.parentCache = parent;
     }
 
-    public BufferedImage getCachedImage(String key){
-        BufferedImage image = imageCache.get(key);
+    public TextureHolder getCachedImage(String key){
+        TextureHolder image = imageCache.get(key);
         if(image == null && parentCache != null)
             image = parentCache.getCachedImage(key);
         return image;
     }
 
-    public void addImage(String key, BufferedImage image){
+    public void addImage(String key, TextureHolder image){
         this.imageCache.put(key, image);
     }
 

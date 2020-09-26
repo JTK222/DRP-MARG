@@ -1,4 +1,6 @@
-package net.dark_roleplay.assetier.helper;
+package net.dark_roleplay.marg.api.textures.helper;
+
+import java.util.Arrays;
 
 public class TextureData {
 
@@ -40,5 +42,16 @@ public class TextureData {
 		for(int x = 0; x < this.width; x++)
 			for(int y = 0; y < this.height; y++)
 				target[x * height + y] = pixels[x][y];
+	}
+
+	private TextureData copyPixelData(int[][] source){
+		for(int i = 0; i < this.width; i++){
+			pixels[i] = Arrays.copyOf(source[i], this.height);
+		}
+		return this;
+	}
+
+	public TextureData clone(){
+		return new TextureData(this.width, this.height).copyPixelData(this.pixels);
 	}
 }

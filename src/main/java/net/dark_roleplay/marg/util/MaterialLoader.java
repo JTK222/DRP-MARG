@@ -15,9 +15,8 @@ import java.util.Map;
 public class MaterialLoader {
 
 	public static void loadMaterialFiles() {
-		//ModList.get().getModFiles()
-		ModList.get().getModFiles().forEach(info -> {
-			Map<String, Object> props = info.getFileProperties();
+		ModList.get().getMods().forEach(info -> {
+			Map<String, Object> props = info.getModProperties();
 
 			if (props.containsKey("margMaterialFiles") && props.get("margMaterialFiles") instanceof List) {
 				List<String> files = (List) props.get("margMaterialFiles");

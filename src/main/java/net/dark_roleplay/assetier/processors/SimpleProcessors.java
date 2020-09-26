@@ -1,6 +1,6 @@
 package net.dark_roleplay.assetier.processors;
 
-import net.dark_roleplay.assetier.helper.TextureData;
+import net.dark_roleplay.marg.api.textures.helper.TextureData;
 
 import java.util.AbstractMap;
 import java.util.Map;

@@ -1,5 +1,6 @@
 package net.dark_roleplay.marg.api.provider;
 
+import net.dark_roleplay.marg.api.textures.helper.TextureHolder;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.LazyOptional;
 
@@ -13,7 +14,7 @@ public interface IGraphicsProvider {
 
     boolean hasTexture(String key);
     ResourceLocation getTextureLocation(String key);
-    LazyOptional<BufferedImage> getTexture(String key);
+    LazyOptional<TextureHolder> getTexture(String key);
 
     Set<String> getTextures();
     Set<String> getTints();

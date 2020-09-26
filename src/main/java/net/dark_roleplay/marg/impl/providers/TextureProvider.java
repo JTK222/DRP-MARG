@@ -1,6 +1,8 @@
 package net.dark_roleplay.marg.impl.providers;
 
 import com.mojang.datafixers.util.Pair;
+import net.dark_roleplay.marg.io.TextureDataIO;
+import net.dark_roleplay.marg.api.textures.helper.TextureHolder;
 import net.dark_roleplay.marg.api.provider.IGraphicsProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
@@ -20,20 +22,25 @@ public final class TextureProvider implements IGraphicsProvider {
 
     private static final Set<String> EMPTY = new HashSet<>();
 
-    private static final BufferedImage NONE_TEXTURE = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
-    private static final BufferedImage ERROR_TEXTURE = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+    private static final TextureHolder NONE_TEXTURE;
+    private static final TextureHolder ERROR_TEXTURE;
 
     static{
-        Graphics gfx = ERROR_TEXTURE.getGraphics();
+        BufferedImage tmp = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+        Graphics gfx = tmp.getGraphics();
         gfx.setColor(new Color(0, 0, 0));
         gfx.fillRect(0, 0, 16, 16);
         gfx.setColor(new Color(255, 0, 255));
         gfx.fillRect(0, 0, 8, 8);
         gfx.fillRect(8, 8, 8, 8);
+        ERROR_TEXTURE = new TextureHolder(TextureDataIO.loadFromBufferedImage(tmp));
+
+        tmp = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+        NONE_TEXTURE = new TextureHolder(TextureDataIO.loadFromBufferedImage(tmp));
     }
 
     private Map<String, ResourceLocation> textureLocations;
-    private Map<String, LazyOptional<BufferedImage>> textures;
+    private Map<String, LazyOptional<TextureHolder>> textures;
 
     public TextureProvider(Map<String, String> textureLocations){
         this.textureLocations = textureLocations.entrySet().stream().map(entry -> new Pair<>(entry.getKey(), new ResourceLocation(entry.getValue()))).collect(Collectors.toMap(Pair::getFirst, Pair::getSecond));
@@ -44,7 +51,7 @@ public final class TextureProvider implements IGraphicsProvider {
             textures.put(entry.getKey(), LazyOptional.of(() -> {
                 try {
                     ResourceLocation correctPath = new ResourceLocation(entry.getValue().getNamespace(), "textures/" + entry.getValue().getPath() + ".png");
-                    return ImageIO.read(Minecraft.getInstance().getResourceManager().getResource(correctPath).getInputStream());
+                    return new TextureHolder(TextureDataIO.loadFromBufferedImage(ImageIO.read(Minecraft.getInstance().getResourceManager().getResource(correctPath).getInputStream())));
                 } catch (IOException e) {
                     return ERROR_TEXTURE;
                 }
@@ -69,7 +76,7 @@ public final class TextureProvider implements IGraphicsProvider {
     }
 
     @Override
-    public LazyOptional<BufferedImage> getTexture(String key){
+    public LazyOptional<TextureHolder> getTexture(String key){
         return textures.containsKey(key) ? textures.get(key) : LazyOptional.empty();
     }
 

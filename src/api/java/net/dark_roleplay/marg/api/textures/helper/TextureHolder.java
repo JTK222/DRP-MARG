@@ -1,6 +1,6 @@
-package net.dark_roleplay.assetier.helper;
+package net.dark_roleplay.marg.api.textures.helper;
 
-import net.dark_roleplay.assetier.processors.IImageProcessor;
+import net.dark_roleplay.marg.api.textures.processors.IImageProcessor;
 
 public class TextureHolder {
 
@@ -12,5 +12,13 @@ public class TextureHolder {
 
 	public void applyProcessor(IImageProcessor processor, TextureData input){
 		this.textureData = processor.processImages(this.textureData, input);
+	}
+
+	public TextureData getTextureData(){
+		return this.textureData;
+	}
+
+	public TextureHolder clone(){
+		return new TextureHolder(textureData.clone());
 	}
 }

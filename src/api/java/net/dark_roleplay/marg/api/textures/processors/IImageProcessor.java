@@ -1,7 +1,7 @@
-package net.dark_roleplay.assetier.processors;
+package net.dark_roleplay.marg.api.textures.processors;
 
 
-import net.dark_roleplay.assetier.helper.TextureData;
+import net.dark_roleplay.marg.api.textures.helper.TextureData;
 
 @FunctionalInterface
 public interface IImageProcessor {

@@ -1,4 +1,4 @@
-package net.dark_roleplay.marg.client;
+package net.dark_roleplay.marg.util.resource_packs;
 
 import java.io.File;
 import java.util.Map;

@@ -1,5 +1,7 @@
 package net.dark_roleplay.marg.impl.generators.textures;
 
+import net.dark_roleplay.assetier.processors.SimpleProcessors;
+import net.dark_roleplay.marg.api.textures.helper.TextureHolder;
 import net.dark_roleplay.marg.util.texture.TextureCache;
 import net.dark_roleplay.marg.util.texture.TexturePair;
 import net.dark_roleplay.marg.util.texture.Axis2D;
@@ -27,22 +29,22 @@ public final class TextureManipulation {
         this.tint = data.getTintIndex();
     }
 
-    public void apply(BufferedImage[] requiredResources, TextureCache localCache, TexturePair pair){
+    public void apply(TextureHolder[] requiredResources, TextureCache localCache, TexturePair pair){
         switch (this.type){
             case NONE:
                 return;
             case MASK:
-                pair.setImage(TextureEditors.maskImage(pair.getImage(), (this.textureName == null || this.textureName.isEmpty()) ? requiredResources[this.textureID] : localCache.getCachedImage(pair.getMaterial().getTextProvider().apply(this.textureName))));
+                pair.getImage().applyProcessor(SimpleProcessors::mask,(this.textureName == null || this.textureName.isEmpty()) ? requiredResources[this.textureID].getTextureData() : localCache.getCachedImage(pair.getMaterial().getTextProvider().apply(this.textureName)).getTextureData());
                 break;
             case OVERLAY:
-                pair.setImage(TextureEditors.overlayImage(pair.getImage(), (this.textureName == null || this.textureName.isEmpty()) ? requiredResources[this.textureID] : localCache.getCachedImage(pair.getMaterial().getTextProvider().apply(this.textureName))));
+                pair.getImage().applyProcessor(SimpleProcessors::overlay, (this.textureName == null || this.textureName.isEmpty()) ? requiredResources[this.textureID].getTextureData() : localCache.getCachedImage(pair.getMaterial().getTextProvider().apply(this.textureName)).getTextureData());
                 break;
-            case FLIP:
-                pair.setImage(TextureEditors.flipImage(pair.getImage(), this.axis == Axis2D.X));
-                break;
-            case ROTATE:
-                pair.setImage(TextureEditors.rotateImage(pair.getImage(), this.angle));
-                break;
+//            case FLIP:
+//                pair.setImage(TextureEditors.flipImage(pair.getImage(), this.axis == Axis2D.X));
+//                break;
+//            case ROTATE:
+//                pair.setImage(TextureEditors.rotateImage(pair.getImage(), this.angle));
+//                break;
         }
     }
 

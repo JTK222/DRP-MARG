@@ -1,6 +1,9 @@
 package net.dark_roleplay.marg.impl.generators.textures;
 
+import net.dark_roleplay.marg.io.TextureDataIO;
 import net.dark_roleplay.marg.api.materials.IMaterial;
+import net.dark_roleplay.marg.api.textures.helper.TextureData;
+import net.dark_roleplay.marg.api.textures.helper.TextureHolder;
 import net.dark_roleplay.marg.util.texture.TextureCache;
 import net.dark_roleplay.marg.util.texture.TexturePair;
 import net.dark_roleplay.marg.util.texture.TextureInputType;
@@ -12,6 +15,7 @@ import net.minecraftforge.common.util.LazyOptional;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
@@ -46,7 +50,7 @@ public class TextureTask {
         return !FileHelper.doesFileExistClient(mat.getTextProvider().apply(outputName));
     }
 
-    public void generate(BufferedImage[] requiredResources, TextureCache localCache, TextureCache globalCache, Set<IMaterial> materials) {
+    public void generate(TextureHolder[] requiredResources, TextureCache localCache, TextureCache globalCache, Set<IMaterial> materials) {
         StringBuilder builder = new StringBuilder();
 
         Set<TexturePair> textures = new HashSet<>();
@@ -55,11 +59,11 @@ public class TextureTask {
         switch (this.inputType) {//TODO Implement generation
             case NONE:
                 for (IMaterial material : materials)
-                    textures.add(new TexturePair(material, new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB)));
+                    textures.add(new TexturePair(material, new TextureHolder(TextureDataIO.loadFromBufferedImage(new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB)))));
                 break;
             case MATERIAL:
                 for (IMaterial material : materials) {
-                    LazyOptional<BufferedImage> texture = material.getGraphicsProvider().getTexture(this.inputName);
+                    LazyOptional<TextureHolder> texture = material.getGraphicsProvider().getTexture(this.inputName);
                     if (texture == null || !texture.isPresent())
                         ;//LogHelper.error(String.format("Tried to load not existing Texture '%s' for '%s:%s'", this.inputName, material.getMaterialTypeName().getName(), material.getName()));
                     textures.add(new TexturePair(material, texture.orElseThrow(null)));
@@ -67,7 +71,7 @@ public class TextureTask {
                 break;
             case CACHE:
                 for (IMaterial material : materials) {
-                    BufferedImage tempImage = localCache.getCachedImage(material.getTextProvider().apply(this.inputName));
+                    TextureHolder tempImage = localCache.getCachedImage(material.getTextProvider().apply(this.inputName));
                     textures.add(new TexturePair(material, tempImage));
 
                 }
@@ -98,7 +102,7 @@ public class TextureTask {
                     try {
                         File outputFile = new File(FileUtil.RESOURCE_PACK_FOLDER + "/assets/" + pair.getMaterial().getTextProvider().apply(this.outputName).replaceFirst(":", "/") + ".png");
                         outputFile.getParentFile().mkdirs();
-                        ImageIO.write(pair.getImage(), "png", outputFile);
+                        ImageIO.write(saveTextureData(pair.getImage().getTextureData()), "png", outputFile);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -112,5 +116,12 @@ public class TextureTask {
                 textures.stream().forEach(pair -> globalCache.addImage(pair.getMaterial().getTextProvider().apply(this.outputName), pair.getImage()));
                 break;
         }
+    }
+
+    private static BufferedImage saveTextureData(TextureData texture){
+        BufferedImage bi = new BufferedImage(texture.getWidth(), texture.getHeight(), BufferedImage.TYPE_INT_ARGB );
+        final int[] a = ( (DataBufferInt) bi.getRaster().getDataBuffer() ).getData();
+        texture.copyToIntArray(a);
+        return bi;
     }
 }
