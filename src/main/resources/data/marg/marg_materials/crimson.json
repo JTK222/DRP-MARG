@@ -1,31 +1,29 @@
-[
-  {
-    "materialType": "wood",
-    "requiredMod": "minecraft",
-    "name": "crimson",
-    "properties": {
-      "mapColor": "adobe",
-      "resistance": 3.0,
-      "hardness": 2.0,
-      "harvestLevel": 0,
-      "harvestTool": "axe"
-    },
-    "textures": {
-      "log": "marg:block/crimson_stem",
-      "log_top": "minecraft:block/crimson_stem_top",
-      "stripped_log": "minecraft:block/stripped_crimson_stem",
-      "stripped_log_top": "minecraft:block/stripped_crimson_stem_top",
-      "planks": "minecraft:block/crimson_planks"
-    },
-    "items": {
-      "log": "crimson_stem",
-      "stripped_log": "stripped_crimson_stem",
-      "planks": "crimson_planks"
-    },
-    "blocks": {
-      "log": "crimson_stem",
-      "stripped_log": "stripped_crimson_stem",
-      "planks": "crimson_planks"
-    }
-  }
-]
+{
+	"materialType": "wood",
+	"requiredMod": "minecraft",
+	"name": "crimson",
+	"properties": {
+		"mapColor": "adobe",
+		"resistance": 3.0,
+		"hardness": 2.0,
+		"harvestLevel": 0,
+		"harvestTool": "axe"
+	},
+	"textures": {
+		"log": "marg:block/crimson_stem",
+		"log_top": "minecraft:block/crimson_stem_top",
+		"stripped_log": "minecraft:block/stripped_crimson_stem",
+		"stripped_log_top": "minecraft:block/stripped_crimson_stem_top",
+		"planks": "minecraft:block/crimson_planks"
+	},
+	"items": {
+		"log": "crimson_stem",
+		"stripped_log": "stripped_crimson_stem",
+		"planks": "crimson_planks"
+	},
+	"blocks": {
+		"log": "crimson_stem",
+		"stripped_log": "stripped_crimson_stem",
+		"planks": "crimson_planks"
+	}
+}

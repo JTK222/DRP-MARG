@@ -1,65 +1,90 @@
 package net.dark_roleplay.marg.util;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import net.minecraft.block.material.MaterialColor;
+import static net.minecraft.block.material.MaterialColor.*;
 
 public class MaterialColorHelper {
 
-    public static MaterialColor getColor(String name) {
-        switch(name){
-            case "air": return MaterialColor.AIR;
-            case "grass": return MaterialColor.GRASS;
-            case "sand": return MaterialColor.SAND;
-            case "wool": return MaterialColor.WOOL;
-            case "tnt": return MaterialColor.TNT;
-            case "ice": return MaterialColor.ICE;
-            case "iron": return MaterialColor.IRON;
-            case "foliage": return MaterialColor.FOLIAGE;
-            case "snow": return MaterialColor.SNOW;
-            case "clay": return MaterialColor.CLAY;
-            case "dirt": return MaterialColor.DIRT;
-            case "stone": return MaterialColor.STONE;
-            case "water": return MaterialColor.WATER;
-            case "wood": return MaterialColor.WOOD;
-            case "quartz": return MaterialColor.QUARTZ;
-            case "adobe": return MaterialColor.ADOBE;
-            case "magenta": return MaterialColor.MAGENTA;
-            case "light_blue": return MaterialColor.LIGHT_BLUE;
-            case "yellow": return MaterialColor.YELLOW;
-            case "lime": return MaterialColor.LIME;
-            case "pink": return MaterialColor.PINK;
-            case "gray": return MaterialColor.GRAY;
-            case "light_gray": return MaterialColor.LIGHT_GRAY;
-            case "cyan": return MaterialColor.CYAN;
-            case "purple": return MaterialColor.PURPLE;
-            case "blue": return MaterialColor.BLUE;
-            case "brown": return MaterialColor.BROWN;
-            case "green": return MaterialColor.GREEN;
-            case "red": return MaterialColor.RED;
-            case "black": return MaterialColor.BLACK;
-            case "gold": return MaterialColor.GOLD;
-            case "diamond": return MaterialColor.DIAMOND;
-            case "lapis": return MaterialColor.LAPIS;
-            case "emerald": return MaterialColor.EMERALD;
-            case "obsidian": return MaterialColor.OBSIDIAN;
-            case "netherrack": return MaterialColor.NETHERRACK;
-            case "white_terracotta": return MaterialColor.WHITE_TERRACOTTA;
-            case "orange_terracotta": return MaterialColor.ORANGE_TERRACOTTA;
-            case "magenta_terracotta": return MaterialColor.MAGENTA_TERRACOTTA;
-            case "light_blue_terracotta": return MaterialColor.LIGHT_BLUE_TERRACOTTA;
-            case "yellow_terracotta": return MaterialColor.YELLOW_TERRACOTTA;
-            case "lime_terracotta": return MaterialColor.LIME_TERRACOTTA;
-            case "pink_terracotta": return MaterialColor.PINK_TERRACOTTA;
-            case "gray_terracotta": return MaterialColor.GRAY_TERRACOTTA;
-            case "light_gray_terracotta": return MaterialColor.LIGHT_GRAY_TERRACOTTA;
-            case "cyan_terracotta": return MaterialColor.CYAN_TERRACOTTA;
-            case "purple_terracotta": return MaterialColor.PURPLE_TERRACOTTA;
-            case "blue_terracotta": return MaterialColor.BLUE_TERRACOTTA;
-            case "brown_terracotta": return MaterialColor.BROWN_TERRACOTTA;
-            case "green_terracotta": return MaterialColor.GREEN_TERRACOTTA;
-            case "red_terracotta": return MaterialColor.RED_TERRACOTTA;
-            case "black_terracotta": return MaterialColor.BLACK_TERRACOTTA;
+	private static BiMap<String, MaterialColor> COLORS = HashBiMap.create(64);
+	private static BiMap<MaterialColor, String> COLORS_INV;
 
-            default: return null;
-        }
-    }
+	public static final Codec<MaterialColor> MATERIAL_COLOR = Codec.STRING.comapFlatMap(DataResult.partialGet(MaterialColorHelper::getColor, () -> "Unknown material color"), MaterialColorHelper::getColorName);
+
+	static{
+		COLORS.put("air", AIR);
+		COLORS.put("grass", GRASS);
+		COLORS.put("sand", SAND);
+		COLORS.put("wool", WOOL);
+		COLORS.put("tnt", TNT);
+		COLORS.put("ice", ICE);
+		COLORS.put("iron", IRON);
+		COLORS.put("foliage", FOLIAGE);
+		COLORS.put("snow", SNOW);
+		COLORS.put("clay", CLAY);
+		COLORS.put("dirt", DIRT);
+		COLORS.put("stone", STONE);
+		COLORS.put("water", WATER);
+		COLORS.put("wood", WOOD);
+		COLORS.put("quartz", QUARTZ);
+		COLORS.put("adobe", ADOBE);
+		COLORS.put("magenta", MAGENTA);
+		COLORS.put("light_blue", LIGHT_BLUE);
+		COLORS.put("yellow", YELLOW);
+		COLORS.put("lime", LIME);
+		COLORS.put("pink", PINK);
+		COLORS.put("gray", GRAY);
+		COLORS.put("light_gray", LIGHT_GRAY);
+		COLORS.put("cyan", CYAN);
+		COLORS.put("purple", PURPLE);
+		COLORS.put("blue", BLUE);
+		COLORS.put("brown", BROWN);
+		COLORS.put("green", GREEN);
+		COLORS.put("red", MaterialColor.RED);
+		COLORS.put("black", MaterialColor.BLACK);
+		COLORS.put("gold", MaterialColor.GOLD);
+		COLORS.put("diamond", MaterialColor.DIAMOND);
+		COLORS.put("lapis", MaterialColor.LAPIS);
+		COLORS.put("emerald", MaterialColor.EMERALD);
+		COLORS.put("obsidian", MaterialColor.OBSIDIAN);
+		COLORS.put("netherrack", MaterialColor.NETHERRACK);
+		COLORS.put("white_terracotta", MaterialColor.WHITE_TERRACOTTA);
+		COLORS.put("orange_terracotta", MaterialColor.ORANGE_TERRACOTTA);
+		COLORS.put("magenta_terracotta", MaterialColor.MAGENTA_TERRACOTTA);
+		COLORS.put("light_blue_terracotta", MaterialColor.LIGHT_BLUE_TERRACOTTA);
+		COLORS.put("yellow_terracotta", MaterialColor.YELLOW_TERRACOTTA);
+		COLORS.put("lime_terracotta", MaterialColor.LIME_TERRACOTTA);
+		COLORS.put("pink_terracotta", MaterialColor.PINK_TERRACOTTA);
+		COLORS.put("gray_terracotta", MaterialColor.GRAY_TERRACOTTA);
+		COLORS.put("light_gray_terracotta", MaterialColor.LIGHT_GRAY_TERRACOTTA);
+		COLORS.put("cyan_terracotta", MaterialColor.CYAN_TERRACOTTA);
+		COLORS.put("purple_terracotta", MaterialColor.PURPLE_TERRACOTTA);
+		COLORS.put("blue_terracotta", MaterialColor.BLUE_TERRACOTTA);
+		COLORS.put("brown_terracotta", MaterialColor.BROWN_TERRACOTTA);
+		COLORS.put("green_terracotta", MaterialColor.GREEN_TERRACOTTA);
+		COLORS.put("red_terracotta", MaterialColor.RED_TERRACOTTA);
+		COLORS.put("black_terracotta", MaterialColor.BLACK_TERRACOTTA);
+		COLORS.put("crimson_nylium", MaterialColor.CRIMSON_NYLIUM);
+		COLORS.put("crimson_stem", MaterialColor.CRIMSON_STEM);
+		COLORS.put("crimson_hyphae", MaterialColor.CRIMSON_HYPHAE);
+		COLORS.put("warped_nylium", MaterialColor.WARPED_NYLIUM);
+		COLORS.put("warped_stem", MaterialColor.WARPED_STEM);
+		COLORS.put("warped_hyphae", MaterialColor.WARPED_HYPHAE);
+		COLORS.put("warped_wart", MaterialColor.WARPED_WART);
+
+		COLORS_INV = COLORS.inverse();
+	}
+
+	private static MaterialColor getColor(String name) {
+		MaterialColor color = COLORS.get(name);
+		return color == null ? AIR : color;
+	}
+
+	private static String getColorName(MaterialColor color) {
+		String colorName = COLORS_INV.get(color);
+		return colorName == null ? "air" : colorName;
+	}
 }

@@ -10,6 +10,7 @@ buildscript {
         classpath "com.wynprice.cursemaven:CurseMaven:1.2.3"
     }
 }
+
 plugins {
     id 'com.matthewprenger.cursegradle' version '1.4.0'
     id 'idea'
@@ -34,10 +35,6 @@ configurations {
 
 sourceSets {
     api
-    main {
-        compileClasspath += sourceSets.api.output
-        runtimeClasspath += sourceSets.api.output
-    }
 }
 
 minecraft {
@@ -47,22 +44,22 @@ minecraft {
             workingDirectory project.file('runs/client')
             property 'forge.logging.console.level', 'debug'
 
-            environment 'MOD_CLASSES',
-                    "archivesBaseName%%${project.file('out/production/resources').canonicalPath};" +
-                    "archivesBaseName%%${project.file('out/production/classes').canonicalPath};" +
-                    "archivesBaseName%%${project.file('out/api/resources').canonicalPath};"+
-                    "archivesBaseName%%${project.file('out/api/classes').canonicalPath}"
+            mods {
+                marg {
+                    source sourceSets.main
+                }
+            }
         }
 
         server {
             workingDirectory project.file('runs/server')
             property 'forge.logging.console.level', 'debug'
 
-            environment 'MOD_CLASSES',
-                    "archivesBaseName%%${project.file('out/production/resources').canonicalPath};" +
-                            "archivesBaseName%%${project.file('out/production/classes').canonicalPath};" +
-                            "archivesBaseName%%${project.file('out/api/resources').canonicalPath};"+
-                            "archivesBaseName%%${project.file('out/api/classes').canonicalPath}"
+            mods {
+                marg {
+                    source sourceSets.main
+                }
+            }
         }
     }
 }
@@ -74,19 +71,12 @@ repositories {
 }
 
 dependencies {
-    minecraft([
-            group   : 'net.minecraftforge',
-            name    : 'forge',
-            version : "${MC_VERSION}-${FORGE_VERSION}"
-
-    ])
+    minecraft "net.minecraftforge:forge:${MC_VERSION}-${FORGE_VERSION}"
 }
 
 jar {
     from sourceSets.main.output.classesDirs
     from sourceSets.main.output.resourcesDir
-    from sourceSets.api.output.resourcesDir
-    from sourceSets.api.output.classesDirs
 
     manifest {
         attributes([
@@ -145,15 +135,6 @@ processResources {
     }
 }
 
-idea {
-    module {
-        for (String excludeDirName in ["run", "out", "runs", ".github", ".idea", "gradle"]) {
-            File excludeDir = new File(projectDir, excludeDirName)
-            excludeDirs.add(excludeDir)
-        }
-    }
-}
-
 curseforge {
     apiKey = System.getenv('CURSE_API_KEY') // This should really be in a gradle.properties file
     project {
@@ -195,3 +176,20 @@ publishing {
         }
     }
 }
+
+import net.minecraftforge.gradle.common.task.SignJar
+
+task signJar(type: SignJar, dependsOn: jar) {
+    onlyIf { // Skip the task if our secret data isn't available
+        project.hasProperty('keyStore')
+    }
+
+    keyStore = project.keyStore
+    alias = project.keyStoreAlias
+    storePass = project.keyStorePass
+    keyPass = project.keyStoreKeyPass
+    inputFile = jar.archivePath
+    outputFile = jar.archivePath
+}
+
+build.dependsOn signJar
