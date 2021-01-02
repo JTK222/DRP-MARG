@@ -30,7 +30,7 @@ public class ServerStarting {
 	public static void serverStarting(FMLServerAboutToStartEvent event) {
 		((ResourcePackList<?>) ObfuscationReflectionHelper.getPrivateValue(MinecraftServer.class, event.getServer(), "field_195577_ad")).addPackFinder(new MargResourcePackFinder(FileUtil.DATA_PACK_FOLDER));
 
-		IResourceManager listener = event.getServer().getDataPackRegistries().func_240970_h_();
+		IResourceManager listener = event.getServer().getDataPackRegistries().getResourceManager();
 		if(listener instanceof IReloadableResourceManager){
 			IReloadableResourceManager reloadListener = (IReloadableResourceManager) listener;
 			reloadListener.addReloadListener(

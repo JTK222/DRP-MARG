@@ -20,7 +20,7 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'com.wynprice.cursemaven'
 
-def MOD_VERSION = '0.5.4';
+def MOD_VERSION = '0.5.5-SNAPSHOT';
 
 version = "${MC_VERSION}-${MOD_VERSION}"
 group = 'net.dark_roleplay'
@@ -68,7 +68,7 @@ minecraft {
 }
 
 repositories {
-    maven {url = "https://maven.dark-roleplay.net/"}
+    //maven {url = "https://maven.dark-roleplay.net/"}
     maven {url = "https://minecraft.curseforge.com/api/maven/"}
     mavenLocal()
 }
@@ -195,3 +195,20 @@ publishing {
         }
     }
 }
+
+import net.minecraftforge.gradle.common.task.SignJar
+
+task signJar(type: SignJar, dependsOn: jar) {
+    onlyIf { // Skip the task if our secret data isn't available
+        project.hasProperty('keyStore')
+    }
+
+    keyStore = project.keyStore
+    alias = project.keyStoreAlias
+    storePass = project.keyStorePass
+    keyPass = project.keyStoreKeyPass
+    inputFile = jar.archivePath
+    outputFile = jar.archivePath
+}
+
+build.dependsOn signJar

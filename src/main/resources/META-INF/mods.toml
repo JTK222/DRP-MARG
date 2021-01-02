@@ -1,6 +1,7 @@
 modLoader="javafml" #mandatory
 loaderVersion="[28,)" #mandatory (24 is current forge generatorVersion)
 issueTrackerURL="http://my.issue.tracker/" #optional
+license="ARR"
 
 [[mods]]
 	modId="marg"

@@ -28,6 +28,6 @@ public class Marg {
 		MaterialLoader.loadMaterialFiles();
 		FileUtil.setupFolders();
 
-		DistExecutor.runWhenOn(Dist.CLIENT, () -> MargClient::run);
+		DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> MargClient::run);
 	}
 }
