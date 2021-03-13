@@ -60,11 +60,11 @@ public class MaterialCondition implements Iterable<Material> {
 
 	private boolean isValidMaterial(Material material){
 		for(String tex : textures)
-			if(!material.getTextures().containsKey(tex)) return false;
+			if(!material.getTextureProvider().getTextures().containsKey(tex)) return false;
 		for(String item : items)
 			if(!material.getItems().containsKey(item)) return false;
 		for(String block : blocks)
 			if(!material.getBlocks().containsKey(block)) return false;
-		return false;
+		return true;
 	}
 }

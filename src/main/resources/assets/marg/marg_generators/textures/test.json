@@ -1,0 +1,36 @@
+{
+	"generatorVersion": 0,
+	"material": {
+		"materialType": "wood"
+	},
+	"requiredTextures": {
+		"overlay": "marg:overlays/test",
+		"mask": "marg:masks/test"
+	},
+	"tasks": [
+		{
+			"inputType": "material",
+			"outputType": "FILE",
+			"inputName": "log",
+			"outputName": "minecraft:block/${material}_test",
+			"manipulations": [
+				{
+					"type": "overlay",
+					"texture": "overlay"
+				}
+			]
+		},
+		{
+			"inputType": "material",
+			"outputType": "FILE",
+			"inputName": "log",
+			"outputName": "minecraft:block/${material}_test2",
+			"manipulations": [
+				{
+					"type": "mask",
+					"texture": "mask"
+				}
+			]
+		}
+	]
+}

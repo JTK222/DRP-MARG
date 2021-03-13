@@ -2,6 +2,10 @@ package net.dark_roleplay.marg.common.material;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.dark_roleplay.marg.MargClient;
+import net.dark_roleplay.marg.MargServer;
+import net.dark_roleplay.marg.common.providers.TextureProvider;
+import net.dark_roleplay.marg.util.DistConsumer;
 
 import java.util.Map;
 
@@ -12,7 +16,7 @@ public class Material {
 			Codec.STRING.fieldOf("name").forGetter(Material::getMaterialName),
 			Codec.STRING.optionalFieldOf("requiredMod", null).forGetter(Material::getRequiredMods),
 			MaterialProperties.CODEC.fieldOf("properties").forGetter(Material::getProperties),
-			Codec.unboundedMap(Codec.STRING, Codec.STRING).fieldOf("textures").forGetter(Material::getTextures),
+			Codec.unboundedMap(Codec.STRING, Codec.STRING).fieldOf("textures").forGetter((mat) -> mat.getTextureProvider().getTextures()),
 			Codec.unboundedMap(Codec.STRING, Codec.STRING).fieldOf("items").forGetter(Material::getItems),
 			Codec.unboundedMap(Codec.STRING, Codec.STRING).fieldOf("blocks").forGetter(Material::getBlocks)
 	).apply(i, Material::new));
@@ -22,10 +26,9 @@ public class Material {
 	private String requiredMods;
 
 	private MaterialProperties properties;
-	private Map<String, String> textures;
+	private TextureProvider textureProvider;
 	private Map<String, String> items;
 	private Map<String, String> blocks;
-
 
 	public Material(String materialType, String materialName, String requiredMods, MaterialProperties properties, Map<String, String> textures, Map<String, String> items, Map<String, String> blocks) {
 		this.materialType = materialType;
@@ -33,7 +36,7 @@ public class Material {
 		this.requiredMods = requiredMods;
 		this.properties = properties;
 
-		this.textures = textures;
+		this.textureProvider = DistConsumer.safeConsumeForDist(textures, () -> MargClient::createTextureProvider, () -> MargServer::createTextureProvider);
 		this.items = items;
 		this.blocks = blocks;
 		//TODO handle textures, items and blocks
@@ -51,12 +54,12 @@ public class Material {
 		return requiredMods;
 	}
 
-	public MaterialProperties getProperties() {
-		return properties;
+	public TextureProvider getTextureProvider(){
+		return textureProvider;
 	}
 
-	public Map<String, String> getTextures() {
-		return textures;
+	public MaterialProperties getProperties() {
+		return properties;
 	}
 
 	public Map<String, String> getItems() {

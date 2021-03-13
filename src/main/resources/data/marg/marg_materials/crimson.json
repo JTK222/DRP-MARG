@@ -10,7 +10,7 @@
 		"harvestTool": "axe"
 	},
 	"textures": {
-		"log": "marg:block/crimson_stem",
+		"log": "minecraft:block/crimson_stem",
 		"log_top": "minecraft:block/crimson_stem_top",
 		"stripped_log": "minecraft:block/stripped_crimson_stem",
 		"stripped_log_top": "minecraft:block/stripped_crimson_stem_top",

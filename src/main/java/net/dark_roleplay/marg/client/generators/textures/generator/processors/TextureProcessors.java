@@ -1,20 +1,13 @@
-package net.dark_roleplay.marg.client.processing.textures.processors;
+package net.dark_roleplay.marg.client.generators.textures.generator.processors;
 
-import net.dark_roleplay.marg.client.textures.TextureData;
+import net.dark_roleplay.marg.client.generators.textures.texture.TextureData;
 
 import java.util.AbstractMap;
-import java.util.Map;
 
 public class TextureProcessors {
 
 	public static TextureData overlay(TextureData source, TextureProcessorData data){
-		TextureInputData inputData = (TextureInputData) data;
-		TextureData input = data.g
-
-		Map.Entry<TextureData, TextureData> processed = equalizeTextures(source, input);
-
-		source = processed.getKey();
-		input = processed.getValue();
+		TextureData input = data.getTexture().getTextureData()[data.getTextureDataIndex()];
 
 		int width = source.getWidth(), height = source.getHeight();
 
@@ -38,10 +31,7 @@ public class TextureProcessors {
 	}
 
 	public static TextureData mask(TextureData source, TextureProcessorData data){
-		Map.Entry<TextureData, TextureData> processed = equalizeTextures(source, input);
-
-		source = processed.getKey();
-		input = processed.getValue();
+		TextureData input = data.getTexture().getTextureData()[data.getTextureDataIndex()];
 
 		int width = source.getWidth(), height = source.getHeight();
 

@@ -1,4 +1,4 @@
-package net.dark_roleplay.marg.client.textures;
+package net.dark_roleplay.marg.client.generators.textures.texture;
 
 import java.util.Arrays;
 

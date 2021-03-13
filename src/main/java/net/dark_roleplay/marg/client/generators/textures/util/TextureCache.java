@@ -1,6 +1,6 @@
-package net.dark_roleplay.marg.client.processing.textures;
+package net.dark_roleplay.marg.client.generators.textures.util;
 
-import net.dark_roleplay.marg.client.textures.TextureHolder;
+import net.dark_roleplay.marg.client.generators.textures.texture.TextureHolder;
 import net.dark_roleplay.marg.common.material.Material;
 
 import java.util.HashMap;

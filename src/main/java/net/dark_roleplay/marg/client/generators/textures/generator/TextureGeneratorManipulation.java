@@ -1,17 +1,15 @@
-package net.dark_roleplay.marg.client.processing.textures;
+package net.dark_roleplay.marg.client.generators.textures.generator;
 
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.KeyDispatchCodec;
 import com.mojang.serialization.codecs.PairCodec;
-import net.dark_roleplay.marg.client.processing.textures.processors.TextureProcessorData;
-import net.dark_roleplay.marg.client.processing.textures.processors.TextureProcessors;
-import net.dark_roleplay.marg.client.textures.TextureData;
-import net.dark_roleplay.marg.client.textures.TextureHolder;
+import net.dark_roleplay.marg.client.generators.textures.generator.processors.TextureProcessorData;
+import net.dark_roleplay.marg.client.generators.textures.generator.processors.TextureProcessors;
+import net.dark_roleplay.marg.client.generators.textures.texture.TextureData;
 import net.dark_roleplay.marg.util.EnumDecoder;
 
-import java.util.List;
 import java.util.function.BiFunction;
 
 public class TextureGeneratorManipulation {
@@ -23,7 +21,7 @@ public class TextureGeneratorManipulation {
 					Codec.STRING,
 					data -> DataResult.error("Cannot convert TextureProcessorData Codec back to type"),
 					type -> DataResult.success(TextureProcessorData.getCodecForType(type)),
-					type -> DataResult.error("Cannot encode TextureProssorData")
+					type -> DataResult.error("Cannot encode TextureProcessorData")
 			).codec()
 	).xmap(TextureGeneratorManipulation::new, val -> Pair.of(val.getManipulationType(), val.getData()));
 
@@ -35,15 +33,6 @@ public class TextureGeneratorManipulation {
 		this.data = manData.getSecond();
 	}
 
-	public void apply(List<TextureHolder> generatorInputs, TextureCache localCache, TextureHolder holder){
-//		//TODO Replace null with inputTexture;
-//
-//		TextureHolder input = generatorInputID > -1 ? generatorInputs.get(generatorInputID) : localCache.getCachedTexture(cacheName);
-//		if(input.size() > 1 && holder.size() > 1 && input.size() != holder.size()) //Can only apply animated textures to each other if they have the same size
-//			return; //TODO throw exception
-//		holder.applyProcessor(manipulationType.getProcessor(), input, data);
-	}
-
 	public ManipulationType getManipulationType() {
 		return manipulationType;
 	}
@@ -52,7 +41,7 @@ public class TextureGeneratorManipulation {
 		return data;
 	}
 
-	private enum ManipulationType {
+	public enum ManipulationType {
 		overlay(TextureProcessors::overlay),
 		mask(TextureProcessors::mask);
 

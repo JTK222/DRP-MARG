@@ -1,7 +1,8 @@
 package net.dark_roleplay.marg.common.material;
 
 import com.google.gson.JsonParser;
-import net.dark_roleplay.marg.Marg2;
+import net.dark_roleplay.marg.Marg;
+import net.dark_roleplay.marg.api.materials.MaterialRegistry;
 import net.dark_roleplay.marg.util.CodecUtil;
 import net.minecraftforge.fml.ModList;
 
@@ -20,14 +21,12 @@ public class MaterialLoader {
 				List<String> files = (List) props.get("margMaterialFiles");
 
 				files.parallelStream()
-						.map(fileName -> Marg2.class.getClassLoader().getResourceAsStream(fileName))
+						.map(fileName -> Marg.class.getClassLoader().getResourceAsStream(fileName))
 						.map(inputStream -> new InputStreamReader(inputStream))
 						.map(reader -> parser.parse(reader))
 						.map(json -> CodecUtil.decodeCodec(Material.CODEC, json))
 						.filter(material -> material != null && ModList.get().isLoaded(material.getRequiredMods()))
-				.forEach(material -> System.out.println(material.getMaterialName()));
-				//TODO Collect and register
-				System.out.println("Test");
+						.forEach(MaterialRegistry.getInstance()::registerMaterial);
 			}
 		});
 	}
