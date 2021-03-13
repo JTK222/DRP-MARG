@@ -81,8 +81,7 @@ public class TextureGeneratorTask {
 
 		switch(this.outputType){
 			case FILE:
-				//TODO Replace hardcoded key with text provider
-				TextureUtils.writeTexture(new ResourceLocation(this.outputName.replaceAll("\\$\\{material\\}", mat.getMaterialName())), input);
+				TextureUtils.writeTexture(new ResourceLocation(mat.getTextProvider().apply(this.outputName)), input);
 				break;
 			case GLOBAL_CACHE:
 				global.addTexture(this.outputName, input);
@@ -91,8 +90,6 @@ public class TextureGeneratorTask {
 				localCache.addTexture(this.outputName, input);
 				break;
 		}
-
-		//TODO whandle finished tasks
 	}
 
 	enum InputType {

@@ -1,0 +1,4 @@
+{
+	"${material}" : "lorem_ipsum",
+	"${item%planks}": "${texture%log}"
+}

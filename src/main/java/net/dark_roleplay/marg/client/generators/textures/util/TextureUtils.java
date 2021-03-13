@@ -9,12 +9,13 @@ import org.lwjgl.stb.STBImage;
 import org.lwjgl.stb.STBImageWrite;
 import org.lwjgl.system.MemoryStack;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class TextureUtils {
 
@@ -58,6 +59,8 @@ public class TextureUtils {
 
 	public static void writeTexture(ResourceLocation outputLoc, TextureHolder textureHolder){
 		TextureData[] textures = textureHolder.getTextureData();
+		boolean needsMetaFile = textures.length > 1;
+
 		int width = textures[0].getWidth(), height = textures[0].getHeight();
 		String fileName = FileSystems.getDefault().getPath("./mod_data/marg/resource_pack/assets/" + outputLoc.getNamespace() + "/textures/" + outputLoc.getPath() + ".png").normalize().toAbsolutePath().toString();
 
@@ -76,6 +79,27 @@ public class TextureUtils {
 			outputBuf.rewind();
 
 			STBImageWrite.stbi_write_png(fileName, width, totalHeight, 4, outputBuf, width * 4);
+		}
+
+		if(needsMetaFile){
+			Path metaFile = FileSystems.getDefault().getPath("./mod_data/marg/resource_pack/assets/" + outputLoc.getNamespace() + "/textures/" + outputLoc.getPath() + ".png.mcmeta").normalize();
+			String metaFileContent = ""; //TODO add meta content
+
+			try {
+				if(!Files.exists(metaFile))
+					Files.createDirectories(metaFile.getParent());
+				Files.createFile(metaFile);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			try(Writer writer = new OutputStreamWriter(new FileOutputStream(metaFile.toFile()), StandardCharsets.UTF_8.name())){
+				writer.write(metaFileContent);
+			} catch (UnsupportedEncodingException | FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

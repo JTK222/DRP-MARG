@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.dark_roleplay.marg.MargClient;
 import net.dark_roleplay.marg.MargServer;
+import net.dark_roleplay.marg.common.providers.TextProvider;
 import net.dark_roleplay.marg.common.providers.TextureProvider;
 import net.dark_roleplay.marg.util.DistConsumer;
 
@@ -27,6 +28,7 @@ public class Material {
 
 	private MaterialProperties properties;
 	private TextureProvider textureProvider;
+	private TextProvider textProvider;
 	private Map<String, String> items;
 	private Map<String, String> blocks;
 
@@ -36,10 +38,21 @@ public class Material {
 		this.requiredMods = requiredMods;
 		this.properties = properties;
 
+		this.textProvider = new TextProvider(materialName);
 		this.textureProvider = DistConsumer.safeConsumeForDist(textures, () -> MargClient::createTextureProvider, () -> MargServer::createTextureProvider);
 		this.items = items;
 		this.blocks = blocks;
-		//TODO handle textures, items and blocks
+
+		for(Map.Entry<String, String> texture : textures.entrySet())
+			textProvider.addEntry("texture%" + texture.getKey(), texture.getValue());
+
+		for(Map.Entry<String, String> item : items.entrySet())
+			textProvider.addEntry("item%" + item.getKey(), item.getValue());
+
+		for(Map.Entry<String, String> block : blocks.entrySet())
+			textProvider.addEntry("block%" + block.getKey(), block.getValue());
+
+		//TODO add item & block providers
 	}
 
 	public String getMaterialType() {
@@ -56,6 +69,10 @@ public class Material {
 
 	public TextureProvider getTextureProvider(){
 		return textureProvider;
+	}
+
+	public TextProvider getTextProvider() {
+		return textProvider;
 	}
 
 	public MaterialProperties getProperties() {

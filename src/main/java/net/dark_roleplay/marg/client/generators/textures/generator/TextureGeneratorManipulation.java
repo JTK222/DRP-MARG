@@ -43,7 +43,9 @@ public class TextureGeneratorManipulation {
 
 	public enum ManipulationType {
 		overlay(TextureProcessors::overlay),
-		mask(TextureProcessors::mask);
+		mask(TextureProcessors::mask),
+		rotate(TextureProcessors::rotate),
+		flip(TextureProcessors::flip);
 
 		private static Codec<ManipulationType> CODEC = Codec.STRING.comapFlatMap(new EnumDecoder<ManipulationType>(ManipulationType.class)::decode, ManipulationType::toString).stable();
 

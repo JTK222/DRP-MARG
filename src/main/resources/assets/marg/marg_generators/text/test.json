@@ -1,0 +1,12 @@
+{
+	"generatorVersion": 0,
+	"material": {
+		"materialType": "wood"
+	},
+	"tasks": [
+		{
+			"input": "marg:text/test.json",
+			"output": "minecraft:text/${material}_test.json"
+		}
+	]
+}

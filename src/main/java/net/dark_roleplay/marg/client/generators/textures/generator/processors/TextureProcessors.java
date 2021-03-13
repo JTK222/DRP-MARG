@@ -53,14 +53,45 @@ public class TextureProcessors {
 		return source;
 	}
 
-//	/**
-//	 * Rotates the sourceImage by the passed in rotationAngle
-//	 *
-//	 * @param sourceImage
-//	 * @param rotationAngle
-//	 *                      in degrees
-//	 * @return a modified copy of the sourceImage
-//	 */
+	public static TextureData rotate(TextureData source, TextureProcessorData data){
+		TextureData sourceCopy = source.clone();
+
+		int rotations = 1;
+
+		int width = source.getWidth();
+		int height = source.getHeight();
+
+		for(int x = 0; x < width; x++){
+			for(int y = 0; y < height; y++){
+				if(rotations == 1)
+					source.setPixel(x, y, sourceCopy.getPixel(height - y, x));
+				if(rotations == 2)
+					source.setPixel(x, y, sourceCopy.getPixel(width - x, height - y));
+				if(rotations == 3)
+					source.setPixel(x, y, sourceCopy.getPixel(width - x, y));
+			}
+		}
+
+		return source;
+	}
+
+	public static TextureData flip(TextureData source, TextureProcessorData data){
+		TextureData sourceCopy = source.clone();
+
+		boolean xAxis = true;
+
+		int width = source.getWidth();
+		int height = source.getHeight();
+
+		for(int x = 0; x < width; x++){
+			for(int y = 0; y < height; y++){
+				source.setPixel(x, y, sourceCopy.getPixel(xAxis ? width-1-x : x, xAxis ? y : height - 1 - y));
+			}
+		}
+
+		return source;
+	}
+
 //	public static BufferedImage rotateImage(BufferedImage sourceImage, int rotationAngle) {
 //		double			sin			= Math.abs(Math.sin(Math.toRadians(rotationAngle))), cos = Math.abs(Math.cos(Math.toRadians(rotationAngle)));
 //
@@ -80,14 +111,6 @@ public class TextureProcessors {
 //		return copy;
 //	}
 //
-//	/**
-//	 * Flips the Source Image.
-//	 *
-//	 * @param sourceImage
-//	 * @param flipOnX     if true the sourceImage is flipped horizontally,
-//	 *                    otherwise vertically
-//	 * @return a modified copy of the sourceImage
-//	 */
 //	public static BufferedImage flipImage(BufferedImage sourceImage, boolean flipOnX) {
 //		BufferedImage	copy		= new BufferedImage(sourceImage.getWidth(), sourceImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
 //		Graphics2D		graphics	= copy.createGraphics();

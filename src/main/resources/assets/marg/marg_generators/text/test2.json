@@ -1,0 +1,17 @@
+{
+	"generatorVersion": 0,
+	"material": {
+		"materialType": "wood"
+	},
+	"customs": [
+		"potato",
+		"apple",
+		"chicken"
+	],
+	"tasks": [
+		{
+			"input": "marg:text/test.json",
+			"output": "minecraft:text/${material}_${custom}_test.json"
+		}
+	]
+}
